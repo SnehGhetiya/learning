@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variables and Strings</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Module 1: Python basics · Topic 2</nav>
+
+<h1>Variables and strings</h1>
+<p class="subtitle">Naming values, working with text, and turning your study plan into a program that asks you questions.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd><code>02_study_plan_v2.py</code>: a script that asks for your name and hours, then prints a neatly formatted report.</dd>
+  <dt>Time</dt><dd>About 25 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7 (checked 24 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/introduction.html#text">The Python Tutorial §3.1.2: Text</a> (official, ~15 min)</dd>
+</dl>
+
+<h2>Warm-up: from Topic 1</h2>
+<p>Recalling something a day later strengthens the memory far more than recalling it straight away. Answer these without looking back.</p>
+
+<div class="quiz predict" data-expect="3.0">
+  <p class="q">What does Python show?</p>
+<pre>&gt;&gt;&gt; 9 / 3</pre>
+  <div class="explain"><code>/</code> always gives a float, so the answer is <code>3.0</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="1">
+  <p class="q">What does Python show?</p>
+<pre>&gt;&gt;&gt; 9 % 4</pre>
+  <div class="explain">9 ÷ 4 = 2 with <strong>1</strong> left over.</div>
+</div>
+
+<h3>Feedback on your Topic 1 code</h3>
+<p>Your <code>01_study_plan.py</code> works, and <code>weeks % 4</code> for the leftover weeks is exactly right. Two small things, both fixed in this lesson:</p>
+<ol>
+  <li><strong>The double space.</strong> Your output is <code>Weeks to finish:  18.0</code>, with two spaces. <code>print</code> already puts a space between values, and your text <code>"Weeks to finish: "</code> ends with one too. The f-strings you'll learn below give you exact control over spacing.</li>
+  <li><strong><code>total_minutes</code> never appears.</strong> You calculated it but didn't <code>print</code> it. Remember from Topic 1 that <em>scripts only show what you print</em>. Also, the challenge asked for minutes <em>per week</em>, which is <code>hours_per_week * 60</code>; <code>total_hours * 60</code> gives minutes for the whole course.</li>
+</ol>
+
+<h2>1 · Variables, properly</h2>
+<p>A <strong>variable</strong> is a name that points to a value. The <code>=</code> sign means "make this name point to this value". It's not the "equals" from maths. So this is valid:</p>
+<pre><span class="p">&gt;&gt;&gt; </span>hours = 4
+<span class="p">&gt;&gt;&gt; </span>hours = hours + 2
+<span class="p">&gt;&gt;&gt; </span>hours
+6</pre>
+<p>Python evaluates the right side first (<code>4 + 2</code>, which is <code>6</code>), then makes <code>hours</code> point to the result.</p>
+
+<h3>Naming rules</h3>
+<ul>
+  <li>Names may use letters, digits and <code>_</code>, but <strong>cannot start with a digit</strong>: <code>week2</code> is fine, but <code>2nd</code> is a <code>SyntaxError</code>.</li>
+  <li>Names are <strong>case-sensitive</strong>: <code>hours</code> and <code>Hours</code> are different names.</li>
+  <li>The convention is <code>snake_case</code>: <code>hours_per_week</code>, not <code>hoursPerWeek</code> (<a href="https://peps.python.org/pep-0008/#function-and-variable-names">PEP 8</a>).</li>
+</ul>
+
+<p class="note">Python 3.14's error messages often suggest a fix. Read them; they're on your side.</p>
+<p>If you use a name that doesn't exist, perhaps because of a typo, you get a <code>NameError</code>:</p>
+<pre>NameError: name 'hours_per_wek' is not defined. Did you mean: 'hours_per_week'?</pre>
+
+<h3>Every value has a type</h3>
+<p><code>type()</code> tells you what kind of value something is (<a href="https://docs.python.org/3/builtins/functions.html#type">docs</a>). So far you know <code>int</code> and <code>float</code>. Text is the third type, <code>str</code>:</p>
+<pre><span class="p">&gt;&gt;&gt; </span>type(4)
+&lt;class 'int'&gt;
+<span class="p">&gt;&gt;&gt; </span>type(4.0)
+&lt;class 'float'&gt;
+<span class="p">&gt;&gt;&gt; </span>type("hello")
+&lt;class 'str'&gt;</pre>
+<p>A variable has no fixed type. <code>x = 4</code> and then <code>x = "four"</code> is allowed, just as in JavaScript.</p>
+
+<h2>2 · Strings</h2>
+<p>A <strong>string</strong> (<code>str</code>) is a piece of text. You write one in <code>"double"</code> or <code>'single'</code> quotes; both mean the same thing.</p>
+<pre><span class="p">&gt;&gt;&gt; </span>print("She said \"hi\"")   <span class="c"># \" puts a quote inside a string</span>
+She said "hi"
+<span class="p">&gt;&gt;&gt; </span>print('It\'s fine')        <span class="c"># or \' inside single quotes</span>
+It's fine
+<span class="p">&gt;&gt;&gt; </span>print("line1\nline2")      <span class="c"># \n means "new line"</span>
+line1
+line2</pre>
+
+<h3>Operators on strings</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Result</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td><code>"Hello, " + "world"</code></td><td><code>'Hello, world'</code></td><td><code>+</code> joins strings ("concatenation")</td></tr>
+    <tr><td><code>"ha" * 3</code></td><td><code>'hahaha'</code></td><td><code>*</code> repeats</td></tr>
+    <tr><td><code>len("python")</code></td><td><code>6</code></td><td>number of characters</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>String methods</h3>
+<p>A <strong>method</strong> is a function that belongs to a value. You call it with a dot: <code>value.method()</code>. Here are the most useful ones (<a href="https://docs.python.org/3/builtins/stdtypes.html#string-methods">full list</a>):</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>"  AI Engineer  ".strip()</code></td><td><code>'AI Engineer'</code>: removes spaces at both ends</td></tr>
+    <tr><td><code>"ai engineer".upper()</code></td><td><code>'AI ENGINEER'</code></td></tr>
+    <tr><td><code>"AI Engineer".lower()</code></td><td><code>'ai engineer'</code></td></tr>
+    <tr><td><code>"ai engineer".title()</code></td><td><code>'Ai Engineer'</code>: capitalises each word</td></tr>
+    <tr><td><code>"python,rag".replace(",", " + ")</code></td><td><code>'python + rag'</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">The most common beginner bug</span>
+  Strings can <strong>never be changed</strong> ("immutable"). Methods return a <em>new</em> string and leave the original alone:
+<pre>title = "ai engineer"
+title.upper()          <span class="c"># makes 'AI ENGINEER'... and throws it away</span>
+title = title.upper()  <span class="c"># ✓ keep the result by assigning it</span></pre>
+</div>
+
+<p>You can <strong>chain</strong> methods, and they run left to right: <code>"  ada lovelace ".strip().title()</code> gives <code>'Ada Lovelace'</code>.</p>
+
+<h2>3 · f-strings: putting values into text</h2>
+<p>Put an <code>f</code> before the opening quote, and anything inside <code>{ }</code> is evaluated as Python code (<a href="https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals">docs</a>):</p>
+<pre><span class="p">&gt;&gt;&gt; </span>hours = 4
+<span class="p">&gt;&gt;&gt; </span>f"I study {hours} hours, which is {hours * 60} minutes"
+'I study 4 hours, which is 240 minutes'</pre>
+<p>Add <code>:.1f</code> after a value to show it with 1 decimal place, or <code>:.0f</code> for none (<a href="https://docs.python.org/3/library/string.html#formatspec">format spec docs</a>):</p>
+<pre><span class="p">&gt;&gt;&gt; </span>f"{180 / 7:.1f} hours"
+'25.7 hours'</pre>
+<p class="note">Python 3.14 also added <strong>t-strings</strong>, <code>t"..."</code> (<a href="https://docs.python.org/3/whatsnew/3.14.html#pep-750-template-string-literals">PEP 750</a>). They're for advanced uses, such as safely building HTML or SQL. For everyday work, f-strings are what you want.</p>
+<p>That's the fix for your double space: <code>print(f"Weeks to finish: {weeks}")</code> is a single string, so you control every character.</p>
+
+<h2>4 · Converting between types</h2>
+<div class="callout">
+  <span class="label">Watch out, JavaScript habit</span>
+  In JavaScript, <code>"4" + 4</code> quietly gives <code>"44"</code>. Python refuses to guess:
+<pre>TypeError: can only concatenate str (not "int") to str</pre>
+  Instead, you convert values yourself.
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>int("10") + 5</code></td><td><code>15</code></td></tr>
+    <tr><td><code>float("2.5")</code></td><td><code>2.5</code></td></tr>
+    <tr><td><code>str(42) + "!"</code></td><td><code>'42!'</code></td></tr>
+    <tr><td><code>int("ten")</code></td><td><code>ValueError: invalid literal for int() with base 10: 'ten'</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3><code>input()</code>: asking the user</h3>
+<p><code>input("question")</code> shows the question, waits for the user to type and press Enter, and returns what they typed (<a href="https://docs.python.org/3/builtins/functions.html#input">docs</a>). It <strong>always returns a <code>str</code></strong>, even if the user types a number. To do maths with it, convert it first: <code>float(input("Hours: "))</code>.</p>
+
+<h2>Build it: study plan v2</h2>
+<ol class="steps" data-key="t2-build">
+  <li>
+    Create the file, and type it in rather than pasting:
+<pre><span class="p">$ </span>cd ~/Music/learning/ai/practice
+<span class="p">$ </span>subl 02_study_plan_v2.py</pre>
+<p class="file-label">02_study_plan_v2.py</p>
+<pre><span class="c"># Study plan v2: ask for my details, then print a tidy report.</span>
+name = input("Your name: ").strip().title()
+hours_per_week = float(input("Hours per week: "))
+total_hours = 180
+
+weeks = total_hours / hours_per_week
+minutes_per_week = hours_per_week * 60
+
+print(f"\nStudy plan for {name}")
+print(f"Minutes per week: {minutes_per_week:.0f}")
+print(f"Weeks to finish:  {weeks:.1f}")
+print(f"Whole months:     {weeks // 4:.0f}")</pre>
+  </li>
+  <li>
+    Run it and answer the questions. Try typing your name with extra spaces or in lowercase, and see how <code>.strip().title()</code> cleans it up:
+<pre><span class="p">$ </span>python3 02_study_plan_v2.py
+Your name:   ada lovelace
+Hours per week: 4
+
+Study plan for Ada Lovelace
+Minutes per week: 240
+Weeks to finish:  45.0
+Whole months:     11</pre>
+  </li>
+  <li>
+    <strong>Break it on purpose.</strong> Remove <code>float(</code> and its closing <code>)</code> from line 3, then run again:
+<pre>Traceback (most recent call last):
+  File "02_study_plan_v2.py", line 6, in &lt;module&gt;
+    weeks = total_hours / hours_per_week
+            ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for /: 'int' and 'str'</pre>
+    Read the last line first: Python can't divide an <code>int</code> by a <code>str</code>, because <code>input()</code> gave you text. The <code>~~~^~~~</code> marks the exact operation that failed. Put <code>float(...)</code> back.
+  </li>
+</ol>
+
+<h2>Practice: recall, don't reread</h2>
+
+<div class="quiz predict" data-expect="ai engineer">
+  <p class="q">1. What does this print?</p>
+<pre>title = "ai engineer"
+title.upper()
+print(title)</pre>
+  <div class="explain">Strings are immutable. <code>title.upper()</code> created <code>'AI ENGINEER'</code>, but nothing kept it, so <code>title</code> is unchanged: <code>ai engineer</code>. The fix is <code>title = title.upper()</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="44">
+  <p class="q">2. What does this print?</p>
+<pre>print("4" + "4")</pre>
+  <div class="explain">Both are strings, so <code>+</code> joins them into <code>44</code>. It's text, not the number 8.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">3. What happens with <code>"4" + 4</code> in Python?</p>
+  <div class="options">
+    <button class="opt" data-correct>A TypeError is raised</button>
+    <button class="opt">It gives string 44</button>
+    <button class="opt">It gives number 8</button>
+    <button class="opt">It gives string 8</button>
+  </div>
+  <div class="explain">Python won't mix <code>str</code> and <code>int</code> with <code>+</code>. You choose explicitly: <code>int("4") + 4</code> gives <code>8</code>, and <code>"4" + str(4)</code> gives <code>'44'</code>.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">4. A user runs <code>age = input("Age: ")</code> and types <code>30</code>. What is the type of <code>age</code>?</p>
+  <div class="options">
+    <button class="opt" data-correct>str</button>
+    <button class="opt">int</button>
+    <button class="opt">float</button>
+  </div>
+  <div class="explain"><code>input()</code> always returns a <code>str</code>, here <code>'30'</code>. Convert it with <code>int(age)</code> before doing maths.</div>
+</div>
+
+<div class="quiz predict" data-expect="3.33">
+  <p class="q">5. What does this print?</p>
+<pre>print(f"{10 / 3:.2f}")</pre>
+  <div class="explain"><code>10 / 3</code> is <code>3.3333…</code>, and <code>:.2f</code> shows 2 decimal places: <code>3.33</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="2">
+  <p class="q">6. What does this print?</p>
+<pre>print(len("  hi  ".strip()))</pre>
+  <div class="explain"><code>.strip()</code> runs first and gives <code>'hi'</code>, whose length is <code>2</code>. Without the strip, it would be 6, because spaces count as characters.</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Answer from memory</h3>
+<details class="recall">
+  <summary>How do you put the value of <code>hours</code> into a sentence?</summary>
+  <p>With an f-string: <code>f"I study {hours} hours"</code>.</p>
+</details>
+<details class="recall">
+  <summary>Why do you need <code>float(input(...))</code> rather than just <code>input(...)</code>?</summary>
+  <p><code>input()</code> always returns a <code>str</code>, and you can't do maths with text, so you convert it to a number first.</p>
+</details>
+<details class="recall">
+  <summary>You wrote <code>name.strip()</code>, but <code>name</code> still has spaces. Why?</summary>
+  <p>Strings are immutable. The method returned a new string that you didn't keep. Write <code>name = name.strip()</code>.</p>
+</details>
+
+<h2>Stretch challenge</h2>
+<ol>
+  <li>Ask one more question, <code>Target role: </code>, and print it in <strong>upper case</strong> in the report.</li>
+  <li>Add a line with the leftover weeks (from Topic 1), formatted with no decimals.</li>
+  <li>Print a divider line of 30 <code>=</code> signs above and below the report, without typing 30 of them. (Hint: string <code>*</code>.)</li>
+</ol>
+
+<div class="ask">
+  <strong>Questions? Ask me (Claude) in the terminal.</strong> "Why are strings immutable?" and "Explain chaining again" are good questions to ask. When you're done, tell me your score and paste your stretch code, and I'll review it before Topic 3.
+</div>
+
+<p>Quick reference: <a href="../reference/python-cheatsheet.html#topic-2">Python cheat sheet, Topic 2</a>.</p>
+
+<nav class="next">
+  <a href="0001-running-python.html">← Topic 1: Running Python</a>
+  <a href="0003-booleans-and-if-else.html">Next: Topic 3, True/False and if/else →</a>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

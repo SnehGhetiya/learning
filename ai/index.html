@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Engineer Course</title>
+<link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs">Course home</nav>
+
+<h1>From zero Python to AI engineer</h1>
+<p class="subtitle">Learn each topic, build a project that uses it, then move on. By the end you'll have a deployed capstone project for your resume.</p>
+
+<dl class="meta">
+  <dt>Mission</dt><dd>Get hired as an AI engineer (<a href="MISSION.md">MISSION.md</a>)</dd>
+  <dt>Pace</dt><dd>About 10 hours a week, with topic lessons of 30–40 minutes (about 6 months in total)</dd>
+  <dt>Cost</dt><dd>Free: local models, free API tiers and free cloud GPUs</dd>
+  <dt>Versions</dt><dd>Checked against official docs when each lesson is written</dd>
+</dl>
+
+<h2>How the course works</h2>
+<p>Every module follows the same three steps:</p>
+<ol>
+  <li><strong>Topics:</strong> one concept per lesson, taught from the ground up, with exercises that check your answers instantly.</li>
+  <li><strong>Module project:</strong> a real program that combines everything from that module's topics.</li>
+  <li><strong>Next module:</strong> it builds on the last one.</li>
+</ol>
+<p class="note">This is a plan, not a contract. The order and pace adjust to how your lessons go.</p>
+
+<h2>Reference</h2>
+<ul>
+  <li><a href="reference/python-cheatsheet.html">Python cheat sheet</a> (grows with every topic)</li>
+</ul>
+
+<h2>Modules</h2>
+
+<div class="phase current">
+  <h3>1 · Python basics</h3>
+  <span class="when">12 topics + project · ≈ 4–5 weeks</span>
+  <ol>
+    <li><a href="lessons/0001-running-python.html">Running Python</a>: interactive mode, numbers, your first script</li>
+    <li><a href="lessons/0002-variables-and-strings.html">Variables and strings</a>: naming, text, f-strings, <code>input()</code></li>
+    <li><a href="lessons/0003-booleans-and-if-else.html">True/False and <code>if</code>/<code>else</code></a>: comparisons, <code>and</code>/<code>or</code>/<code>not</code>, blocks</li>
+    <li><a href="lessons/0004-lists-and-loops.html">Lists and loops</a>: indexing, <code>split</code>/<code>join</code>, <code>for</code>, <code>range</code>, <code>while</code></li>
+    <li>Dictionaries, tuples and sets</li>
+    <li>Functions</li>
+    <li>Built-in functions and comprehensions</li>
+    <li>Errors and exceptions</li>
+    <li>Files and JSON</li>
+    <li>Modules, packages and <code>uv</code> (Python's npm)</li>
+    <li>Classes and dataclasses</li>
+    <li>Type hints</li>
+  </ol>
+  <em>Project:</em> <code>job-radar</code>, a command-line tool that reads AI job postings and reports the most in-demand skills.
+</div>
+
+<div class="phase">
+  <h3>2 · Python for web and APIs</h3>
+  <span class="when">≈ 2–3 weeks</span>
+  <ul>
+    <li>Calling web APIs with httpx</li>
+    <li><code>async</code>/<code>await</code></li>
+    <li>Pydantic (data validation, used everywhere in LLM apps)</li>
+    <li>FastAPI (building your own API)</li>
+  </ul>
+  <em>Project:</em> turn <code>job-radar</code> into a web API.
+</div>
+
+<div class="phase">
+  <h3>3 · LLM fundamentals</h3>
+  <span class="when">≈ 4–5 weeks</span>
+  <ul>
+    <li>What an LLM is: tokens, context and temperature</li>
+    <li>Running a model on your own machine (Ollama / LM Studio)</li>
+    <li>Calling a free-tier model API</li>
+    <li>Prompting and structured output</li>
+    <li>Tool calling</li>
+    <li>Embeddings and vector search</li>
+    <li>RAG (retrieval-augmented generation)</li>
+    <li>Evals: proving your app works</li>
+  </ul>
+  <em>Project:</em> an LLM that extracts skills from postings and answers questions about them.
+</div>
+
+<div class="phase">
+  <h3>4 · LangChain and LangGraph</h3>
+  <span class="when">≈ 2–3 weeks</span>
+  <ul>
+    <li>LangChain 1.x: models, messages and tools</li>
+    <li>Agents with <code>create_agent</code> (the current API, <a href="https://docs.langchain.com/oss/python/langchain/agents">docs</a>)</li>
+    <li>LangGraph: state, memory, human-in-the-loop</li>
+    <li>Agents and MCP</li>
+  </ul>
+  <em>Project:</em> an agent version of <code>job-radar</code>.
+</div>
+
+<div class="phase">
+  <h3>5 · Classic machine learning</h3>
+  <span class="when">≈ 3 weeks</span>
+  <ul>
+    <li>NumPy and pandas</li>
+    <li>scikit-learn: regression and classification</li>
+    <li>Train/test splits, metrics, overfitting</li>
+  </ul>
+  <em>Project:</em> a classifier that predicts a posting's seniority.
+</div>
+
+<div class="phase">
+  <h3>6 · Neural networks from scratch</h3>
+  <span class="when">≈ 3–4 weeks</span>
+  <ul>
+    <li>PyTorch tensors and autograd</li>
+    <li>Training loops, loss and gradient descent</li>
+    <li>A tiny GPT, following <a href="https://karpathy.ai/zero-to-hero.html">Karpathy's Zero to Hero</a></li>
+  </ul>
+  <em>Project:</em> train a small language model on a free cloud GPU.
+</div>
+
+<div class="phase">
+  <h3>7 · Fine-tuning open models</h3>
+  <span class="when">≈ 2–3 weeks</span>
+  <ul>
+    <li>Hugging Face: Transformers, Datasets, the Hub</li>
+    <li>LoRA fine-tuning with Unsloth on a free GPU</li>
+    <li>When to fine-tune, and when to use RAG or better prompts instead</li>
+  </ul>
+  <em>Project:</em> fine-tune a small model and publish it to Hugging Face.
+</div>
+
+<div class="phase">
+  <h3>8 · Capstone</h3>
+  <span class="when">≈ 3–4 weeks</span>
+  <ul>
+    <li>Tentative: a full-stack <strong>AI job-search copilot</strong>, built with your web skills plus everything above</li>
+    <li>Deployed, with a README, a demo video and eval results</li>
+  </ul>
+  <em>We'll confirm the idea together after Module 3.</em>
+</div>
+
+<h2>Communities</h2>
+<p>The lessons give you knowledge and skills; wisdom comes from other people. For now: <a href="https://www.pythondiscord.com/">Python Discord</a> and <a href="https://www.reddit.com/r/learnpython/">r/learnpython</a>, which both welcome beginners. See <a href="RESOURCES.md">RESOURCES.md</a> for the full list.</p>
+
+</main>
+<script src="assets/components.js"></script>
+</body>
+</html>

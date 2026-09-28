@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lists and Loops</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Module 1: Python basics · Topic 4</nav>
+
+<h1>Lists and loops</h1>
+<p class="subtitle">Storing many values in one place, repeating work, and finally fixing your AI-role check properly.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd><code>04_study_plan_v4.py</code>: it re-asks until the hours are valid, prints your full module plan with a loop, and detects AI roles word by word.</dd>
+  <dt>Time</dt><dd>About 40 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7 (checked 24 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/introduction.html#lists">The Python Tutorial §3.1.3: Lists</a>, then <a href="https://docs.python.org/3/tutorial/controlflow.html#for-statements">§4.2–4.4: <code>for</code>, <code>range()</code>, <code>break</code></a> (official, ~20 min)</dd>
+</dl>
+
+<h2>Warm-up: from Topics 2 and 3</h2>
+
+<div class="quiz predict" data-expect="unset">
+  <p class="q">What does this print?</p>
+<pre>hours = 0
+if hours:
+    print("set")
+else:
+    print("unset")</pre>
+  <div class="explain"><code>0</code> is falsy, so the <code>else</code> block runs.</div>
+</div>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">What does this print?</p>
+<pre>print("Senior AI".lower().startswith("ai"))</pre>
+  <div class="explain"><code>"senior ai"</code> starts with <code>"se"</code>, not <code>"ai"</code>. This is the false negative from your Topic 3 fix.</div>
+</div>
+
+<h3>Feedback on your updated Topic 3 code</h3>
+<p>Your new check works for most cases. I tested it with 12 roles:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Role</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>AI Engineer</code>, <code>Senior AI Engineer</code>, <code>Generative AI Developer</code>, <code>ai</code></td><td>✅ detected</td></tr>
+    <tr><td><code>Maintenance Manager</code>, <code>Airline Pilot</code></td><td>✅ correctly ignored</td></tr>
+    <tr><td><code>Head of AI</code>, <code>Lead AI</code></td><td>❌ missed: "ai" is the <em>last</em> word, so there's no space after it, and <code>" ai "</code> doesn't match</td></tr>
+    <tr><td><code>AI/ML Engineer</code>, <code>AI-Engineer</code></td><td>❌ missed: punctuation instead of a space</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Your bug-explanation comment is clear and accurate. Good. You could add <code>or target_role.lower().endswith(" ai")</code> to catch the first ❌ row, but notice the pattern: every new case needs another condition. That's a sign you need a better tool, and that tool is <strong>lists</strong>. (One small thing: line 15 and the ends of lines 30–32 have trailing spaces. To remove them in Sublime, open <em>Find → Replace</em>, turn on regex (<code>.*</code>), find <code>[ \t]+$</code> and replace it with nothing.)</p>
+
+<h2>1 · Lists</h2>
+<p>A <strong>list</strong> holds many values in order, inside <code>[ ]</code>, separated by commas. It's Python's version of a JavaScript array.</p>
+<pre>skills = ["python", "rag", "evals"]
+module_hours = [40, 25, 45]
+empty = []</pre>
+
+<h3>Getting items out: indexing and slicing</h3>
+<p>Every item has a position, called its <strong>index</strong>, <strong>starting at 0</strong>.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Result</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>skills[0]</code></td><td><code>'python'</code></td><td>first item</td></tr>
+    <tr><td><code>skills[-1]</code></td><td><code>'evals'</code></td><td>last item (negative indexes count from the end, like JS <code>arr.at(-1)</code>)</td></tr>
+    <tr><td><code>skills[0:2]</code></td><td><code>['python', 'rag']</code></td><td>a <strong>slice</strong>: from index 0 up to, <em>but not including</em>, 2</td></tr>
+    <tr><td><code>len(skills)</code></td><td><code>3</code></td><td>number of items</td></tr>
+    <tr><td><code>skills[5]</code></td><td><code>IndexError: list index out of range</code></td><td>no item there (JS would quietly give <code>undefined</code>)</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">Indexing and slicing also work on strings: <code>"python"[0]</code> is <code>'p'</code>, and <code>"python"[0:3]</code> is <code>'pyt'</code>.</p>
+
+<h3>Changing a list</h3>
+<p>Unlike strings, lists are <strong>mutable</strong>: you can change them in place (<a href="https://docs.python.org/3/tutorial/datastructures.html#more-on-lists">list methods</a>).</p>
+<pre>skills.append("pytorch")   <span class="c"># add to the end → ['python', 'rag', 'evals', 'pytorch']</span>
+skills.remove("rag")       <span class="c"># remove the first match → ['python', 'evals', 'pytorch']</span>
+skills[0] = "Python"       <span class="c"># replace by index</span>
+"rag" in skills            <span class="c"># False: `in` works on lists too</span></pre>
+
+<div class="callout">
+  <span class="label">Mutable vs immutable: the <code>sort</code> trap</span>
+  String methods return a <em>new</em> string. Many list methods instead change the list <em>in place</em> and return nothing. Python's "nothing" is the value <strong><code>None</code></strong>:
+<pre>x = [3, 1, 2]
+y = x.sort()     <span class="c"># sorts x in place → x is [1, 2, 3]</span>
+print(y)         <span class="c"># None, so don't assign the result of .sort()</span>
+z = sorted(x)    <span class="c"># sorted() RETURNS a new sorted list, leaving x alone</span></pre>
+</div>
+
+<h3>Strings ↔ lists: <code>split</code> and <code>join</code></h3>
+<p>This is the fix for your AI-role check (<a href="https://docs.python.org/3/builtins/stdtypes.html#str.split">split</a>, <a href="https://docs.python.org/3/builtins/stdtypes.html#str.join">join</a>):</p>
+<pre><span class="p">&gt;&gt;&gt; </span>"head of ai".split()           <span class="c"># split on whitespace</span>
+['head', 'of', 'ai']
+<span class="p">&gt;&gt;&gt; </span>"ai" in "head of ai".split()   <span class="c"># whole-WORD check!</span>
+True
+<span class="p">&gt;&gt;&gt; </span>"python,rag".split(",")        <span class="c"># split on a separator you choose</span>
+['python', 'rag']
+<span class="p">&gt;&gt;&gt; </span>", ".join(["python", "rag"])   <span class="c"># the reverse: glue a list into one string</span>
+'python, rag'</pre>
+<p><code>"ai" in words</code> on a <strong>list</strong> checks for a whole item, while <code>"ai" in text</code> on a <strong>string</strong> checks for letters anywhere. That difference is why "Maintenance" and "Airline" stop matching, and "Head of AI" starts matching.</p>
+
+<h2>2 · <code>for</code> loops</h2>
+<p>A <code>for</code> loop runs a block once <strong>for each item</strong> (<a href="https://docs.python.org/3/tutorial/controlflow.html#for-statements">docs</a>). Each time round, the loop variable points to the next item. It's like <code>for (const skill of skills)</code> in JS.</p>
+<pre>for skill in ["python", "rag", "evals"]:
+    print(skill.upper())
+<span class="c"># PYTHON
+# RAG
+# EVALS</span></pre>
+
+<h3>The accumulator pattern</h3>
+<p>This is a very common pattern: start a total <em>before</em> the loop, then add to it <em>inside</em> the loop. <code>total += n</code> is short for <code>total = total + n</code>.</p>
+<pre>total = 0
+for n in [3, 4, 5]:
+    total += n
+print(total)   <span class="c"># 12. Note: this line is NOT indented, so it runs once, after the loop</span></pre>
+<p class="note">Python has a built-in <code>sum()</code> that does this in one call. You'll meet it in Topic 7. Writing the loop yourself first shows you what it does.</p>
+
+<h3><code>range()</code>: looping over numbers</h3>
+<p><code>range(3)</code> produces <code>0, 1, 2</code>: it starts at 0 and <strong>stops before</strong> the number you give it, just like slices. <code>range(1, 4)</code> produces <code>1, 2, 3</code> (<a href="https://docs.python.org/3/tutorial/controlflow.html#the-range-function">docs</a>). Combined with <code>len()</code>, it lets you loop over positions, which is useful when two lists line up:</p>
+<pre>modules = ["Python basics", "LLM fundamentals"]
+module_hours = [40, 45]
+for i in range(len(modules)):
+    print(f"{i + 1}. {modules[i]} ({module_hours[i]} h)")
+<span class="c"># 1. Python basics (40 h)
+# 2. LLM fundamentals (45 h)</span></pre>
+<p class="note">In Topic 7, <code>enumerate()</code> and <code>zip()</code> make this neater. Learning it with <code>range</code> first makes those easy to understand.</p>
+
+<h2>3 · <code>while</code> loops and <code>break</code></h2>
+<p>A <code>while</code> loop repeats <strong>as long as a condition is true</strong>. Use <code>for</code> when you have items to go through, and <code>while</code> when you don't know how many repeats you'll need, such as "keep asking until the answer is valid":</p>
+<pre>while True:                              <span class="c"># loop forever...</span>
+    hours = float(input("Hours (1-80): "))
+    if 1 &lt;= hours &lt;= 80:
+        break                            <span class="c"># ...until break exits the loop</span>
+    print("Please enter a number from 1 to 80.")</pre>
+<p><code>break</code> exits the loop immediately (<a href="https://docs.python.org/3/tutorial/controlflow.html#break-and-continue-statements">docs</a>). If you forget it, the loop never ends. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop a stuck program.</p>
+
+<h2>Build it: study plan v4</h2>
+<ol class="steps" data-key="t4-build">
+  <li>
+    Create <code>04_study_plan_v4.py</code>. The <code>modules</code> list spans several lines. That's allowed inside <code>[ ]</code>, because Python knows the list isn't finished until the <code>]</code>.
+<p class="file-label">04_study_plan_v4.py</p>
+<pre><span class="c"># Study plan v4: lists, loops and a proper AI-role check.</span>
+name = input("Your name: ").strip().title()
+if not name:
+    name = "Friend"
+target_role = input("Target role: ").strip()
+
+<span class="c"># Keep asking until the hours make sense.</span>
+while True:
+    hours_per_week = float(input("Hours per week (1-80): "))
+    if 1 &lt;= hours_per_week &lt;= 80:
+        break
+    print("Please enter a number from 1 to 80.")
+
+modules = ["Python basics", "Python for web and APIs", "LLM fundamentals",
+           "LangChain and LangGraph", "Classic ML", "Neural networks",
+           "Fine-tuning", "Capstone"]
+module_hours = [40, 25, 45, 25, 30, 35, 25, 45]  <span class="c"># rough estimates</span>
+
+total_hours = 0
+for hours in module_hours:
+    total_hours += hours
+weeks = total_hours / hours_per_week
+
+print("=" * 40)
+print(f"Study plan for {name} as {target_role}")
+print(f"{len(modules)} modules, {total_hours} hours, {weeks:.1f} weeks")
+print("-" * 40)
+
+for i in range(len(modules)):
+    print(f"{i + 1}. {modules[i]} ({module_hours[i]} h)")
+
+words = target_role.lower().split()
+if "ai" in words:
+    print("-" * 40)
+    print("AI role: Modules 3 and 4 will matter most.")
+print("=" * 40)</pre>
+  </li>
+  <li>
+    Run it with the role <code>Head of AI</code>. At the hours question, type <code>0</code>, then <code>120</code>, then <code>10</code>, and watch the <code>while</code> loop re-ask:
+<pre>Hours per week (1-80): 0
+Please enter a number from 1 to 80.
+Hours per week (1-80): 120
+Please enter a number from 1 to 80.
+Hours per week (1-80): 10
+========================================
+Study plan for Ada as Head of AI
+8 modules, 270 hours, 27.0 weeks
+----------------------------------------
+1. Python basics (40 h)
+2. Python for web and APIs (25 h)
+3. LLM fundamentals (45 h)
+4. LangChain and LangGraph (25 h)
+5. Classic ML (30 h)
+6. Neural networks (35 h)
+7. Fine-tuning (25 h)
+8. Capstone (45 h)
+----------------------------------------
+AI role: Modules 3 and 4 will matter most.
+========================================</pre>
+    "Head of AI" is now detected, and "Maintenance Manager" and "Airline Pilot" aren't.
+  </li>
+  <li>
+    <strong>Break it on purpose.</strong> Add <code>print(modules[8])</code> at the end and run it. You'll get <code>IndexError: list index out of range</code>. The list has 8 items, so the last index is <strong>7</strong>. Remove the line.
+  </li>
+  <li>
+    <strong>Break it differently.</strong> At the hours question, type <code>abc</code>. You'll get <code>ValueError: could not convert string to float: 'abc'</code>, and the <code>while</code> loop can't save you, because the crash happens <em>before</em> the <code>if</code>. Fixing this needs <code>try</code>/<code>except</code>, in Topic 8.
+  </li>
+</ol>
+
+<h2>Practice: recall, don't reread</h2>
+
+<div class="quiz predict" data-expect="evals">
+  <p class="q">1. What does this print?</p>
+<pre>skills = ["python", "rag", "evals"]
+print(skills[-1])</pre>
+  <div class="explain"><code>-1</code> is the last item.</div>
+</div>
+
+<div class="quiz predict" data-expect="['python', 'rag']">
+  <p class="q">2. What does this print? (Python prints lists like <code>['a', 'b']</code>.)</p>
+<pre>skills = ["python", "rag", "evals"]
+print(skills[0:2])</pre>
+  <div class="explain">A slice runs from index 0 <em>up to but not including</em> 2, so items 0 and 1.</div>
+</div>
+
+<div class="quiz predict" data-expect="True">
+  <p class="q">3. What does this print?</p>
+<pre>print("ai" in "head of ai".split())</pre>
+  <div class="explain"><code>.split()</code> gives <code>['head', 'of', 'ai']</code>, and <code>"ai"</code> is one of the items.</div>
+</div>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">4. What does this print?</p>
+<pre>print("ai" in "maintenance manager".split())</pre>
+  <div class="explain">The words are <code>['maintenance', 'manager']</code>. Neither word <em>is</em> <code>"ai"</code>, even though one contains those letters. This is the whole-word fix.</div>
+</div>
+
+<div class="quiz predict" data-expect="12">
+  <p class="q">5. What does this print?</p>
+<pre>total = 0
+for n in [3, 4, 5]:
+    total += n
+print(total)</pre>
+  <div class="explain">0 + 3 + 4 + 5 = <code>12</code>. The <code>print</code> isn't indented, so it runs once, after the loop.</div>
+</div>
+
+<div class="quiz predict" data-expect="0 1 2||0, 1, 2||012">
+  <p class="q">6. What does this print? (Type the lines separated by spaces.)</p>
+<pre>for i in range(3):
+    print(i)</pre>
+  <div class="explain"><code>range(3)</code> is <code>0, 1, 2</code>. It starts at 0 and stops <em>before</em> 3.</div>
+</div>
+
+<div class="quiz predict" data-expect="None">
+  <p class="q">7. What does this print?</p>
+<pre>x = [3, 1, 2]
+y = x.sort()
+print(y)</pre>
+  <div class="explain"><code>.sort()</code> changes <code>x</code> in place and returns <code>None</code>. Use <code>sorted(x)</code> when you want a new sorted list back.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">8. When should you choose <code>while</code> over <code>for</code>?</p>
+  <div class="options">
+    <button class="opt" data-correct>When the repeat count is unknown</button>
+    <button class="opt">When looping over a list's items</button>
+    <button class="opt">When you need the index numbers</button>
+    <button class="opt">When the loop must run only once</button>
+  </div>
+  <div class="explain"><code>for</code> goes through things you already have (a list, a <code>range</code>). <code>while</code> keeps going until a condition changes, like "until the input is valid".</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Answer from memory</h3>
+<details class="recall">
+  <summary>What's the difference between <code>"ai" in text</code> and <code>"ai" in text.split()</code>?</summary>
+  <p>On a string, <code>in</code> finds the letters anywhere ("m<strong>ai</strong>ntenance"). On a list of words, it only matches a whole item.</p>
+</details>
+<details class="recall">
+  <summary>Why is <code>y = x.sort()</code> a bug?</summary>
+  <p><code>.sort()</code> sorts <code>x</code> in place and returns <code>None</code>. Either call <code>x.sort()</code> on its own line, or use <code>y = sorted(x)</code>.</p>
+</details>
+<details class="recall">
+  <summary>What are the indexes of the first and last items of a 5-item list?</summary>
+  <p><code>0</code> and <code>4</code>. The last one is also <code>-1</code>.</p>
+</details>
+
+<h2>Stretch challenge</h2>
+<ol>
+  <li><strong>Punctuation:</strong> make <code>AI/ML Engineer</code> and <code>AI-Engineer</code> detected too. (Hint: <code>.replace()</code> before <code>.split()</code>.) Then add <code>ml</code> and <code>llm</code> as AI keywords, using a list of keywords and a loop, or several <code>in</code> checks.</li>
+  <li><strong>Longest module:</strong> using a loop and <code>if</code>, <em>without</em> <code>max()</code>, find and print the module with the most hours. (Hint: keep track of the "best so far" in variables before the loop.)</li>
+  <li><strong>Collect skills:</strong> start with <code>my_skills = []</code>. In a <code>while</code> loop, ask "Add a skill (blank to finish): ", and <code>.append()</code> each one until the user enters a blank line. Then print them all with <code>", ".join(...)</code>.</li>
+</ol>
+
+<div class="ask">
+  <strong>Questions? Ask me (Claude) in the terminal.</strong> Try "why do indexes start at 0?" or "when would I use a while loop in AI code?". When you're done, send me your score and file path, and I'll review them before Topic 5 (dictionaries, tuples and sets).
+</div>
+
+<p>Quick reference: <a href="../reference/python-cheatsheet.html#topic-4">Python cheat sheet, Topic 4</a>.</p>
+
+<nav class="next">
+  <a href="0003-booleans-and-if-else.html">← Topic 3: True/False and if/else</a>
+  <span>Next: Topic 5, Dictionaries, tuples and sets</span>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Cheat Sheet</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Reference</nav>
+
+<h1>Python cheat sheet</h1>
+<p class="subtitle">One section per topic. Each lesson adds its own.</p>
+<p class="score" style="margin-top:-1rem">Python 3.14 · last updated after <a href="../lessons/0004-lists-and-loops.html">Topic 4</a></p>
+
+<h2 id="topic-1">Topic 1 · Running Python</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Do this</th><th>Type this</th></tr></thead>
+  <tbody>
+    <tr><td>Check version</td><td><code>python3 --version</code></td></tr>
+    <tr><td>Start interactive mode</td><td><code>python3</code> → <code>&gt;&gt;&gt;</code> prompt</td></tr>
+    <tr><td>Leave interactive mode</td><td><code>exit()</code> or <kbd>Ctrl</kbd>+<kbd>D</kbd></td></tr>
+    <tr><td>Run a script</td><td><code>python3 file.py</code></td></tr>
+    <tr><td>Open a file in Sublime Text</td><td><code>subl file.py</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Arithmetic</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Operator</th><th>Meaning</th><th>Example → result</th></tr></thead>
+  <tbody>
+    <tr><td><code>+ - *</code></td><td>add, subtract, multiply</td><td><code>6 * 7</code> → <code>42</code></td></tr>
+    <tr><td><code>/</code></td><td>divide (always a <code>float</code>)</td><td><code>8 / 2</code> → <code>4.0</code></td></tr>
+    <tr><td><code>//</code></td><td>floor divide (drop the fraction)</td><td><code>17 // 5</code> → <code>3</code></td></tr>
+    <tr><td><code>%</code></td><td>remainder</td><td><code>17 % 5</code> → <code>2</code></td></tr>
+    <tr><td><code>**</code></td><td>power</td><td><code>2 ** 10</code> → <code>1024</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Basics</h3>
+<pre><span class="c"># a comment: Python ignores it</span>
+hours = 4                    <span class="c"># variable: name = value (snake_case)</span>
+print("Hours:", hours)       <span class="c"># prints: Hours: 4</span></pre>
+<ul>
+  <li><strong><code>int</code></strong> is a whole number, <code>7</code>. <strong><code>float</code></strong> has a decimal point, <code>3.5</code>.</li>
+  <li>Interactive mode shows results automatically. <strong>Scripts only show what you <code>print</code>.</strong></li>
+  <li>To read an error, start at the <strong>last line</strong> (what went wrong), then look up for where (file, line, <code>^</code>).</li>
+  <li>JS trap: <code>//</code> is <em>not</em> a comment in Python. Comments use <code>#</code>.</li>
+</ul>
+
+<h2 id="topic-2">Topic 2 · Variables and strings</h2>
+<h3>Variables</h3>
+<pre>hours = 4
+hours = hours + 2      <span class="c"># right side first, then the name points to 6</span>
+type(hours)            <span class="c"># &lt;class 'int'&gt;. Types so far: int, float, str</span></pre>
+<ul>
+  <li>Names use letters, digits and <code>_</code>, can't start with a digit, and are case-sensitive. Use <code>snake_case</code>.</li>
+  <li>Typo in a name → <code>NameError</code> (Python often suggests "Did you mean…").</li>
+</ul>
+<h3>Strings</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>"a" + "b"</code> / <code>"ha" * 3</code></td><td><code>'ab'</code> / <code>'hahaha'</code></td></tr>
+    <tr><td><code>len("python")</code></td><td><code>6</code></td></tr>
+    <tr><td><code>s.strip()</code> <code>s.upper()</code> <code>s.lower()</code> <code>s.title()</code></td><td>trim ends / UPPER / lower / Title Case</td></tr>
+    <tr><td><code>s.replace("a", "b")</code></td><td>swap every <code>"a"</code> for <code>"b"</code></td></tr>
+    <tr><td><code>"\n"</code>, <code>"\""</code></td><td>new line, quote inside a string</td></tr>
+  </tbody>
+</table>
+</div>
+<ul>
+  <li><strong>Strings are immutable.</strong> Methods return a new string, so keep it: <code>s = s.strip()</code>.</li>
+  <li>Methods chain left to right: <code>s.strip().title()</code>.</li>
+</ul>
+<h3>f-strings and conversion</h3>
+<pre>f"{hours} hours = {hours * 60} min"   <span class="c"># any expression inside { }</span>
+f"{180 / 7:.1f}"                      <span class="c"># '25.7' (1 decimal place)</span>
+int("10")  float("2.5")  str(42)     <span class="c"># convert between types</span>
+hours = float(input("Hours: "))      <span class="c"># input() ALWAYS returns str</span></pre>
+<ul>
+  <li><code>"4" + 4</code> → <code>TypeError</code> (JS would give <code>"44"</code>). <code>int("ten")</code> → <code>ValueError</code>.</li>
+</ul>
+
+<h2 id="topic-3">Topic 3 · True, False and if/else</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>True</code> <code>False</code></td><td>the <code>bool</code> type (capitalised!)</td></tr>
+    <tr><td><code>==  !=  &lt;  &gt;  &lt;=  &gt;=</code></td><td>compare, giving a <code>bool</code>. <code>=</code> assigns; <code>==</code> compares</td></tr>
+    <tr><td><code>5 &lt;= x &lt;= 40</code></td><td>chained comparison: x is between 5 and 40</td></tr>
+    <tr><td><code>"rag" in text</code></td><td>substring check (JS <code>.includes()</code>)</td></tr>
+    <tr><td><code>and  or  not</code></td><td>JS <code>&amp;&amp;  ||  !</code></td></tr>
+  </tbody>
+</table>
+</div>
+<pre>if weeks &gt; 52:            <span class="c"># colon opens a block</span>
+    print("over a year")  <span class="c"># 4-space indent = inside the block</span>
+elif weeks &gt; 26:          <span class="c"># checked only if the above was False</span>
+    print("steady")
+else:                     <span class="c"># runs if nothing matched</span>
+    print("fast")</pre>
+<ul>
+  <li>An <code>if/elif/else</code> chain runs <strong>at most one</strong> block. Separate <code>if</code>s are checked independently.</li>
+  <li>Falsy values: <code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>. So <code>if not name:</code> means "name is empty".</li>
+  <li>Errors: missing <code>:</code> → <code>SyntaxError: expected ':'</code>. No indent → <code>IndentationError</code>. <code>if x = 5</code> → "Maybe you meant '=='".</li>
+</ul>
+
+<h2 id="topic-4">Topic 4 · Lists and loops</h2>
+<pre>skills = ["python", "rag", "evals"]
+skills[0]  skills[-1]        <span class="c"># 'python'  'evals' (index starts at 0)</span>
+skills[0:2]                  <span class="c"># ['python', 'rag'] (up to, not including, 2)</span>
+skills.append("pytorch")     <span class="c"># lists are MUTABLE: change in place</span>
+skills.remove("rag")
+"rag" in skills              <span class="c"># whole-item check</span>
+sorted(skills)               <span class="c"># returns a new list; skills.sort() returns None</span>
+"head of ai".split()         <span class="c"># ['head', 'of', 'ai']</span>
+", ".join(skills)            <span class="c"># 'python, evals, pytorch'</span></pre>
+<pre>for skill in skills:         <span class="c"># once per item</span>
+    print(skill)
+
+total = 0                    <span class="c"># accumulator: start before the loop...</span>
+for n in [3, 4, 5]:
+    total += n               <span class="c"># ...add inside it (+= means total = total + n)</span>
+
+for i in range(len(skills)): <span class="c"># range(3) → 0, 1, 2</span>
+    print(i + 1, skills[i])
+
+while True:                  <span class="c"># repeat until...</span>
+    answer = input("> ")
+    if answer:
+        break                <span class="c"># ...break exits the loop</span></pre>
+<ul>
+  <li><code>"ai" in text</code> matches letters anywhere. <code>"ai" in text.split()</code> matches whole words.</li>
+  <li>A bad index gives <code>IndexError: list index out of range</code>. A stuck loop: press <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+  <li><code>None</code> is Python's "no value" (like JS <code>null</code>).</li>
+</ul>
+
+<p class="note">Sources: <a href="https://docs.python.org/3/tutorial/introduction.html">Python Tutorial §3</a>, <a href="https://docs.python.org/3/tutorial/controlflow.html">§4</a>, <a href="https://docs.python.org/3/tutorial/datastructures.html">§5.1</a>, <a href="https://docs.python.org/3/tutorial/inputoutput.html">§7</a>.</p>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

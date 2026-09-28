@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your First Python Project</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Phase 1: Python · Lesson 1</nav>
+
+<h1>Your first Python project</h1>
+<p class="subtitle">Using uv, Python's answer to npm, to build a tiny tool that counts which skills AI job postings ask for.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd>A working Python project, <code>job-radar</code>, that prints a skill chart from job postings. You'll keep extending it for the rest of Phase 1.</dd>
+  <dt>Time</dt><dd>About 20 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7 · uv 0.12.18 (checked 23 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/introduction.html">The Python Tutorial §3: An Informal Introduction to Python</a> (official, ~30 min)</dd>
+</dl>
+
+<h2>Why start here</h2>
+<p>Every AI engineering project you'll build (RAG apps, evals, fine-tuning scripts) is a Python <em>project</em>, with dependencies and a lockfile, not a loose <code>.py</code> file. So we start the way real projects start. You already know this workflow from npm; only the names change.</p>
+
+<p class="note">uv is written in Rust by Astral and replaces <code>pip</code>, <code>venv</code> and <code>pyenv</code> with a single tool. <a href="https://docs.astral.sh/uv/">uv docs</a></p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>You know (npm)</th><th>Python with uv</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td><code>npm init</code></td><td><code>uv init</code></td><td>Create a project</td></tr>
+    <tr><td><code>package.json</code></td><td><code>pyproject.toml</code></td><td>Project metadata + dependencies</td></tr>
+    <tr><td><code>package-lock.json</code></td><td><code>uv.lock</code></td><td>Exact pinned versions (<a href="https://docs.astral.sh/uv/guides/projects/#uvlock">docs</a>)</td></tr>
+    <tr><td><code>node_modules/</code></td><td><code>.venv/</code></td><td>Where packages get installed, per project</td></tr>
+    <tr><td><code>npm install zod</code></td><td><code>uv add httpx</code></td><td>Add a dependency</td></tr>
+    <tr><td><code>npm run start</code></td><td><code>uv run job-radar</code></td><td>Run inside the project's environment</td></tr>
+    <tr><td><code>npx</code></td><td><code>uvx</code></td><td>Run a tool without installing it</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">Current-version alert</span>
+  Most tutorials online show <code>uv init</code> creating a <code>main.py</code>. <strong>Since uv 0.12</strong>, it creates a <code>src/</code> folder with a package inside instead (<a href="https://docs.astral.sh/uv/concepts/projects/init/#applications">uv docs: Applications</a>). This lesson uses the current layout.
+</div>
+
+<h2>Build it</h2>
+
+<ol class="steps" data-key="l1-build">
+  <li>
+    <strong>Install uv</strong> with the <a href="https://docs.astral.sh/uv/getting-started/installation/">official installer</a> (or <code>brew install uv</code>, since you have Homebrew). Open a new terminal afterwards so your shell can find it.
+<pre><span class="p">$ </span>curl -LsSf https://astral.sh/uv/install.sh | sh
+<span class="p">$ </span>uv --version</pre>
+  </li>
+  <li>
+    <strong>Create the project.</strong> We'll keep all course projects in one folder.
+<pre><span class="p">$ </span>mkdir -p ~/Music/learning/ai/projects
+<span class="p">$ </span>cd ~/Music/learning/ai/projects
+<span class="p">$ </span>uv init job-radar
+<span class="p">$ </span>cd job-radar</pre>
+    You now have <code>pyproject.toml</code>, <code>.python-version</code> (pins Python 3.14), <code>README.md</code> and <code>src/job_radar/__init__.py</code>.
+  </li>
+  <li>
+    <strong>Run it.</strong> The first run creates <code>.venv/</code> and <code>uv.lock</code> automatically, just as the first <code>npm install</code> creates <code>node_modules</code>.
+<pre><span class="p">$ </span>uv run job-radar
+Hello from job-radar!</pre>
+    <code>job-radar</code> works as a command because <code>pyproject.toml</code> maps it to a function: <code>job-radar = "job_radar:main"</code>, meaning "call <code>main</code> in the <code>job_radar</code> package". It's like a <code>"bin"</code> entry in <code>package.json</code>.
+  </li>
+  <li>
+    <strong>Write the real program.</strong> Replace everything in <code>src/job_radar/__init__.py</code> with:
+<p class="file-label">src/job_radar/__init__.py</p>
+<pre><span class="c"># Made-up sample postings. In Lesson 2 we'll load real ones from a file.</span>
+postings = [
+    {"title": "AI Engineer", "skills": ["python", "rag", "evals"]},
+    {"title": "ML Engineer", "skills": ["python", "pytorch", "fine-tuning"]},
+    {"title": "LLM App Developer", "skills": ["python", "rag", "typescript"]},
+]
+
+
+def count_skills(postings):
+    counts = {}
+    for posting in postings:
+        for skill in posting["skills"]:
+            counts[skill] = counts.get(skill, 0) + 1
+    return counts
+
+
+def main() -> None:
+    counts = count_skills(postings)
+    print(f"Scanned {len(postings)} postings\n")
+    for skill, n in counts.items():
+        print(f"{skill:&lt;12} {'#' * n}")</pre>
+  </li>
+  <li>
+    <strong>Run it again.</strong> You don't need a rebuild: uv installs your own package in editable mode, so your edits are picked up.
+<pre><span class="p">$ </span>uv run job-radar
+Scanned 3 postings
+
+python       ###
+rag          ##
+evals        #
+pytorch      #
+fine-tuning  #
+typescript   #</pre>
+  </li>
+</ol>
+
+<h2>Reading the code as a JS developer</h2>
+<p>Everything in that file maps onto something you already know. Here are the differences that matter:</p>
+
+<p class="note">The official tutorial explains indentation as grouping in <a href="https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming">§3.2</a>.</p>
+<p><strong>Indentation is the syntax.</strong> Python has no <code>{ }</code> blocks. A line ending in <code>:</code> opens a block, and the block is everything indented under it (use 4 spaces). When the indentation goes back out, the block ends. Semicolons aren't used.</p>
+
+<p><strong>No <code>const</code>/<code>let</code>.</strong> <code>counts = {}</code> creates the variable. Lists <code>[...]</code> are arrays, and dicts <code>{"key": value}</code> are like objects, but <a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dict</a> keys are accessed with brackets, <code>posting["skills"]</code>, never with a dot.</p>
+
+<p class="note"><a href="https://docs.python.org/3/builtins/stdtypes.html#dict.get"><code>dict.get(key, default)</code></a>: the reference docs.</p>
+<p><strong>Missing keys throw.</strong> In JS, <code>obj.missing</code> is <code>undefined</code>. In Python, <code>counts["rag"]</code> raises a <code>KeyError</code> if <code>"rag"</code> isn't there. That's why we write <code>counts.get(skill, 0)</code>: it returns the default (<code>0</code>) when the key is absent.</p>
+
+<p><strong><code>for x in list</code></strong> works like JS <code>for (const x of list)</code> (<a href="https://docs.python.org/3/tutorial/controlflow.html#for-statements">docs</a>). <code>counts.items()</code> gives <code>(key, value)</code> pairs, like <code>Object.entries()</code>, and <code>for skill, n in ...</code> destructures each pair.</p>
+
+<p class="note">Format specs such as <code>:&lt;12</code> are covered in the <a href="https://docs.python.org/3/library/string.html#formatspec">format mini-language</a> docs. Skim it; don't memorise it.</p>
+<p><strong>f-strings are template literals.</strong> <code>f"Scanned {len(postings)} postings"</code> is <code>`Scanned ${postings.length} postings`</code> (<a href="https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals">docs</a>). <code>{skill:&lt;12}</code> left-aligns the value in 12 characters. <code>'#' * n</code> repeats a string, like <code>'#'.repeat(n)</code>.</p>
+
+<p><strong><code>len(x)</code>, not <code>x.length</code>.</strong> Length is a built-in function that works on lists, dicts and strings.</p>
+
+<p><strong><code>-&gt; None</code> is a type hint,</strong> like TypeScript's <code>: void</code>. Python doesn't enforce it when the code runs; tools and editors use it. We'll use type hints much more in later lessons.</p>
+
+<h2>Practice: recall, don't reread</h2>
+<p>Answer from memory. It's supposed to feel a little hard: pulling an answer out of memory is what makes it stick. Reading it again only feels productive.</p>
+
+<div class="quiz">
+  <p class="q">1. Your npm reflex is <code>npm install zod</code>. Which command adds the <code>httpx</code> package to a uv project?</p>
+  <div class="options">
+    <button class="opt" data-correct>uv add httpx</button>
+    <button class="opt">uv get httpx</button>
+    <button class="opt">uv put httpx</button>
+    <button class="opt">uv use httpx</button>
+  </div>
+  <div class="explain"><code>uv add</code> records the dependency in <code>pyproject.toml</code>, updates <code>uv.lock</code> and installs it into <code>.venv</code>, all in one step (<a href="https://docs.astral.sh/uv/guides/projects/#managing-dependencies">docs</a>).</div>
+</div>
+
+<div class="quiz">
+  <p class="q">2. Which folder plays the role of <code>node_modules</code> in a uv project?</p>
+  <div class="options">
+    <button class="opt" data-correct>.venv</button>
+    <button class="opt">.deps</button>
+    <button class="opt">.pkgs</button>
+    <button class="opt">.libs</button>
+  </div>
+  <div class="explain"><code>.venv</code> is the project's <em>virtual environment</em>: its own isolated Python with its own installed packages. uv creates it on the first <code>uv run</code>. Like <code>node_modules</code>, it stays out of git.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">3. In Python, what tells the interpreter that a function's body has ended?</p>
+  <div class="options">
+    <button class="opt" data-correct>The indentation goes back out</button>
+    <button class="opt">A closing curly brace appears</button>
+    <button class="opt">An end keyword line appears</button>
+    <button class="opt">A blank line then follows it</button>
+  </div>
+  <div class="explain">Blocks are defined by indentation alone. Blank lines are only for readability; the convention of two blank lines between top-level functions comes from <a href="https://peps.python.org/pep-0008/#blank-lines">PEP 8</a>, Python's style guide.</div>
+</div>
+
+<div class="quiz predict" data-expect="0">
+  <p class="q">4. What does this print?</p>
+<pre>counts = {"python": 3}
+print(counts.get("rag", 0))</pre>
+  <div class="explain"><code>"rag"</code> isn't a key, so <code>.get</code> returns the default, <code>0</code>. Writing <code>counts["rag"]</code> would crash with <code>KeyError: 'rag'</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="{'python': 2}">
+  <p class="q">5. What does this print? (Python prints dicts with single quotes.)</p>
+<pre>counts = {"python": 1}
+counts["python"] = counts.get("python", 0) + 1
+print(counts)</pre>
+  <div class="explain">This is the exact counting pattern from <code>count_skills</code>. The key exists, so <code>.get</code> returns <code>1</code>, then <code>+ 1</code> stores <code>2</code>. The output is <code>{'python': 2}</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="2 skills">
+  <p class="q">6. What does this print?</p>
+<pre>skills = ["rag", "evals"]
+print(f"{len(skills)} skills")</pre>
+  <div class="explain"><code>len(skills)</code> is <code>2</code>, and the f-string puts it in place: <code>2 skills</code>.</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Translate from memory</h3>
+<details class="recall">
+  <summary>JS: <code>for (const p of postings) { … }</code>. What's the Python?</summary>
+  <p><code>for p in postings:</code>, followed by an indented block.</p>
+</details>
+<details class="recall">
+  <summary>JS: <code>`${n} postings`</code>. What's the Python?</summary>
+  <p><code>f"{n} postings"</code></p>
+</details>
+<details class="recall">
+  <summary>JS: <code>Object.entries(counts)</code>. What's the Python?</summary>
+  <p><code>counts.items()</code>, usually looped with <code>for key, value in counts.items():</code></p>
+</details>
+
+<h2>Stretch challenge</h2>
+<p>Make the project your own. These are optional, but each one is a real extension:</p>
+<ol>
+  <li>Add a fourth posting with skills you've seen in a real AI job ad, and re-run.</li>
+  <li>Print skills <strong>most common first</strong>. Hint: <code>sorted(counts.items(), key=..., reverse=True)</code>. The <a href="https://docs.python.org/3/howto/sorting.html">Sorting Techniques HOWTO</a> has what you need.</li>
+</ol>
+
+<div class="ask">
+  <strong>Stuck, curious, or something didn't match?</strong> Ask me (Claude) in the terminal. I'm your teacher for this course. Paste any error message and I'll explain it. When you're done, tell me how the quiz went and whether you did the stretch challenge, so I can pitch Lesson 2 at the right level.
+</div>
+
+<p>Quick-reference for this lesson: <a href="../reference/js-to-python.html">JS → Python cheat sheet</a>.</p>
+
+<nav class="next">
+  <a href="../index.html">← Course home</a>
+  <span>Next: Lesson 2, loading real postings from a JSON file</span>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

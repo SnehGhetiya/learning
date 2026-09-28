@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>True, False and if/else</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Module 1: Python basics · Topic 3</nav>
+
+<h1>True, False and <code>if</code>/<code>else</code></h1>
+<p class="subtitle">Teaching your programs to make decisions, and your first indented blocks.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd><code>03_study_plan_v3.py</code>: a study plan that rejects bad input, judges your pace, and reacts to your target role.</dd>
+  <dt>Time</dt><dd>About 35 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7 (checked 24 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/controlflow.html#if-statements">The Python Tutorial §4.1: <code>if</code> Statements</a>, plus <a href="https://docs.python.org/3/tutorial/datastructures.html#more-on-conditions">§5.7: More on Conditions</a> (official, ~10 min)</dd>
+</dl>
+
+<h2>Warm-up: from Topics 1 and 2</h2>
+
+<div class="quiz predict" data-expect="ada">
+  <p class="q">What does this print?</p>
+<pre>name = "ada"
+name.title()
+print(name)</pre>
+  <div class="explain">Strings are immutable. <code>.title()</code> returned <code>'Ada'</code>, but nothing kept it. To keep it, write <code>name = name.title()</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="33">
+  <p class="q">What does this print?</p>
+<pre>print("3" * 2)</pre>
+  <div class="explain"><code>"3"</code> is a string, so <code>*</code> repeats it: <code>33</code>. With the number <code>3 * 2</code>, you'd get <code>6</code>.</div>
+</div>
+
+<h2>1 · A new type: <code>bool</code></h2>
+<p>A <strong>boolean</strong> (<code>bool</code>) has only two possible values: <code>True</code> and <code>False</code>. It's the fourth type you've met, after <code>int</code>, <code>float</code> and <code>str</code>.</p>
+<div class="callout">
+  <span class="label">Watch out, JavaScript habit</span>
+  In Python they're <strong>capitalised</strong>. <code>true</code> in lowercase is just an unknown name:
+<pre>NameError: name 'true' is not defined. Did you mean: 'True'?</pre>
+</div>
+
+<h3>Comparisons produce booleans</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>==</code></td><td>equal to</td><td><code>4 == 4.0</code></td><td><code>True</code></td></tr>
+    <tr><td><code>!=</code></td><td>not equal to</td><td><code>10 != 3</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&lt;</code> <code>&gt;</code></td><td>less / greater than</td><td><code>5 &gt; 3</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&lt;=</code> <code>&gt;=</code></td><td>…or equal</td><td><code>3 &gt;= 5</code></td><td><code>False</code></td></tr>
+  </tbody>
+</table>
+</div>
+<ul>
+  <li><strong><code>=</code> assigns, and <code>==</code> compares.</strong> Mixing them up is the classic bug. Python has no <code>===</code>: <code>==</code> already compares values sensibly (<a href="https://docs.python.org/3/builtins/stdtypes.html#comparisons">docs</a>).</li>
+  <li>String comparison is <strong>case-sensitive</strong>: <code>"AI" == "ai"</code> is <code>False</code>. Use <code>.lower()</code> on both sides when case shouldn't matter.</li>
+  <li>Comparisons can be <strong>chained</strong> as in maths: <code>5 &lt;= hours &lt;= 40</code> means "hours is between 5 and 40".</li>
+</ul>
+
+<h3><code>in</code>: does the text contain this?</h3>
+<pre><span class="p">&gt;&gt;&gt; </span>"rag" in "python, rag, evals"
+True</pre>
+<p>It's like JavaScript's <code>.includes()</code>. You'll use <code>in</code> constantly, and in Topic 4 it works on lists too.</p>
+
+<h3>Combining conditions: <code>and</code>, <code>or</code>, <code>not</code></h3>
+<p class="note">JS <code>&amp;&amp;</code>, <code>||</code> and <code>!</code> become plain English words in Python.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Operator</th><th>True when…</th><th>Example → result</th></tr></thead>
+  <tbody>
+    <tr><td><code>and</code></td><td>both sides are true</td><td><code>True and False</code> → <code>False</code></td></tr>
+    <tr><td><code>or</code></td><td>at least one side is true</td><td><code>True or False</code> → <code>True</code></td></tr>
+    <tr><td><code>not</code></td><td>flips the value</td><td><code>not True</code> → <code>False</code></td></tr>
+  </tbody>
+</table>
+</div>
+<p>See the <a href="https://docs.python.org/3/builtins/stdtypes.html#boolean-operations-and-or-not">boolean operations docs</a>. Use parentheses to make the grouping clear: <code>not (a or b)</code>.</p>
+
+<h2>2 · <code>if</code>, <code>elif</code>, <code>else</code></h2>
+<p>This is where your program starts making choices. It's also your first <strong>block</strong>: a group of lines that belong together.</p>
+<pre>weeks = 30
+
+if weeks &gt; 52:
+    print("over a year")
+elif weeks &gt; 26:
+    print("steady")
+else:
+    print("fast")</pre>
+<ul>
+  <li>Python checks each condition <strong>top to bottom</strong>, runs the block of the <em>first</em> one that's <code>True</code>, then skips the rest. Here it prints <code>steady</code>.</li>
+  <li><code>elif</code> means "else if". You can have as many as you like, or none.</li>
+  <li><code>else</code> is optional. It runs when nothing above matched.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">Indentation is the syntax</span>
+  Python has no <code>{ }</code>. A line ending in <strong><code>:</code></strong> starts a block, and the block is every line <strong>indented 4 spaces</strong> below it. The block ends when the indentation goes back out. In Sublime Text, make sure <em>View → Indentation → Indent Using Spaces</em> is ticked and the tab width is 4. Then <kbd>Tab</kbd> inserts 4 spaces.
+</div>
+
+<p>The three errors you'll hit while learning this, and what they look like in 3.14:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Mistake</th><th>Python says</th></tr></thead>
+  <tbody>
+    <tr><td>Forgot the <code>:</code> in <code>if x &gt; 3</code></td><td><code>SyntaxError: expected ':'</code></td></tr>
+    <tr><td>Didn't indent the line after the <code>if</code></td><td><code>IndentationError: expected an indented block after 'if' statement on line 2</code></td></tr>
+    <tr><td>Wrote <code>if x = 5:</code></td><td><code>SyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Blocks inside blocks</h3>
+<p>A block can contain another <code>if</code>. Each level indents 4 more spaces. You'll see this in the build below: the whole report sits inside an <code>else:</code>, so it only runs when the input is valid.</p>
+
+<h3>Truthiness: values that count as <code>False</code></h3>
+<p>An <code>if</code> doesn't need an actual <code>True</code> or <code>False</code>. Python treats <code>0</code>, <code>0.0</code> and the empty string <code>""</code> as false, and almost everything else as true (<a href="https://docs.python.org/3/builtins/stdtypes.html#truth-value-testing">truth value testing</a>). This makes checks like this read naturally:</p>
+<pre>name = input("Your name: ").strip()
+if not name:
+    print("You didn't type a name!")</pre>
+
+<h2>Build it: study plan v3</h2>
+<ol class="steps" data-key="t3-build">
+  <li>
+    Create <code>03_study_plan_v3.py</code> in your practice folder. Type it in, and pay attention to the indentation:
+<pre><span class="p">$ </span>cd ~/Music/learning/ai/practice
+<span class="p">$ </span>subl 03_study_plan_v3.py</pre>
+<p class="file-label">03_study_plan_v3.py</p>
+<pre><span class="c"># Study plan v3: make decisions based on my answers.</span>
+name = input("Your name: ").strip().title()
+target_role = input("Target role: ").strip()
+hours_per_week = float(input("Hours per week: "))
+total_hours = 180
+
+if hours_per_week &lt;= 0:
+    print("Hours per week must be more than 0.")
+else:
+    weeks = total_hours / hours_per_week
+
+    print("=" * 36)
+    print(f"Study plan for {name}")
+    print(f"Weeks to finish: {weeks:.1f}")
+
+    if weeks &gt; 52:
+        print("Pace: over a year. Can you find more time?")
+    elif weeks &gt; 26:
+        print("Pace: steady, six months to a year.")
+    else:
+        print("Pace: fast track, under six months!")
+
+    if hours_per_week &gt; 40:
+        print("Warning: over 40 hours a week. Plan some rest too.")
+
+    if "ai" in target_role.lower():
+        print("AI role: Modules 3 and 4 will matter most.")
+
+    print("=" * 36)</pre>
+  </li>
+  <li>
+    Run it <strong>three times</strong> with different answers, and predict the output before each run:
+    <ul>
+      <li><code>AI Engineer</code>, <code>10</code> hours</li>
+      <li><code>Data Analyst</code>, <code>3</code> hours</li>
+      <li><code>ai dev</code>, <code>45</code> hours</li>
+    </ul>
+    The first run should give:
+<pre>====================================
+Study plan for Ada
+Weeks to finish: 18.0
+Pace: fast track, under six months!
+AI role: Modules 3 and 4 will matter most.
+====================================</pre>
+    <p>Notice that <code>if</code> / <code>elif</code> / <code>else</code> picks <strong>exactly one</strong> pace, while the two separate <code>if</code>s below it are checked <strong>independently</strong>, so both can print, or neither.</p>
+  </li>
+  <li>
+    Enter <code>0</code> hours. You get <code>Hours per week must be more than 0.</code> The guard worked.
+  </li>
+  <li>
+    <strong>Break it on purpose.</strong> Change <code>&lt;=</code> to <code>&lt;</code> on the first <code>if</code> line, then enter <code>0</code> again:
+<pre>Traceback (most recent call last):
+  File "03_study_plan_v3.py", line 10, in &lt;module&gt;
+    weeks = total_hours / hours_per_week
+            ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+ZeroDivisionError: division by zero</pre>
+    <code>0 &lt; 0</code> is <code>False</code>, so the guard let the zero through, and dividing by zero crashes. Changing one character in a condition decides whether the program crashes. Put <code>&lt;=</code> back.
+  </li>
+</ol>
+
+<h2>Practice: recall, don't reread</h2>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">1. What does this print?</p>
+<pre>print("AI" == "ai")</pre>
+  <div class="explain">String comparison is case-sensitive. Use <code>"AI".lower() == "ai"</code> when case shouldn't matter.</div>
+</div>
+
+<div class="quiz predict" data-expect="True">
+  <p class="q">2. What does this print?</p>
+<pre>print("rag" in "python, rag, evals")</pre>
+  <div class="explain"><code>in</code> checks whether one string appears inside another, and <code>"rag"</code> does.</div>
+</div>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">3. What does this print?</p>
+<pre>print(not (4 &gt; 2 or 1 &gt; 2))</pre>
+  <div class="explain">Work from the inside out. <code>4 &gt; 2</code> is <code>True</code>, so <code>True or False</code> is <code>True</code>, and <code>not True</code> is <code>False</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">4. What does this print?</p>
+<pre>print(3 &lt; 7 &lt; 5)</pre>
+  <div class="explain">A chained comparison means <code>3 &lt; 7 and 7 &lt; 5</code>. The second part is <code>False</code>, so the whole thing is <code>False</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="medium">
+  <p class="q">5. What does this print?</p>
+<pre>hours = 8
+if hours &gt; 20:
+    print("intense")
+elif hours &gt; 5:
+    print("medium")
+elif hours &gt; 2:
+    print("light")
+else:
+    print("minimal")</pre>
+  <div class="explain">The first condition that's <code>True</code> wins: <code>8 &gt; 20</code> is no, and <code>8 &gt; 5</code> is yes, so it prints <code>medium</code>. Python never checks <code>hours &gt; 2</code>, even though it's also true.</div>
+</div>
+
+<div class="quiz predict" data-expect="empty">
+  <p class="q">6. What does this print?</p>
+<pre>name = ""
+if name:
+    print("hello")
+else:
+    print("empty")</pre>
+  <div class="explain">An empty string is falsy, so the <code>else</code> block runs and prints <code>empty</code>.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">7. What happens when Python reads <code>if hours = 10:</code>?</p>
+  <div class="options">
+    <button class="opt" data-correct>Python raises a SyntaxError here</button>
+    <button class="opt">It sets hours to ten</button>
+    <button class="opt">It compares hours to 10</button>
+    <button class="opt">It always runs the block</button>
+  </div>
+  <div class="explain"><code>=</code> assigns, and it isn't allowed in an <code>if</code> condition. Python even suggests the fix: <em>"Maybe you meant '==' …?"</em></div>
+</div>
+
+<div class="quiz">
+  <p class="q">8. How does Python know which lines belong to an <code>if</code>?</p>
+  <div class="options">
+    <button class="opt" data-correct>They are indented below it</button>
+    <button class="opt">They sit inside curly braces</button>
+    <button class="opt">They end with a semicolon</button>
+    <button class="opt">They precede an end line</button>
+  </div>
+  <div class="explain">The <code>:</code> opens the block, and the indentation (4 spaces) defines it. There are no braces or <code>end</code> keyword.</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Answer from memory</h3>
+<details class="recall">
+  <summary>How do you write JavaScript's <code>a &amp;&amp; !b</code> in Python?</summary>
+  <p><code>a and not b</code></p>
+</details>
+<details class="recall">
+  <summary>What's the difference between an <code>if</code>/<code>elif</code> chain and two separate <code>if</code>s?</summary>
+  <p>An <code>if</code>/<code>elif</code>/<code>else</code> chain runs <strong>at most one</strong> block, the first that's true. Separate <code>if</code>s are each checked independently, so several can run.</p>
+</details>
+<details class="recall">
+  <summary>Name three values that count as false in an <code>if</code>.</summary>
+  <p><code>False</code>, <code>0</code> (and <code>0.0</code>), and the empty string <code>""</code>.</p>
+</details>
+
+<h2>Stretch challenge</h2>
+<p>These take a little thinking. That's the point.</p>
+<ol>
+  <li><strong>Empty name:</strong> if the user just presses Enter at the name question, use <code>"Friend"</code> as the name instead. (Hint: truthiness.)</li>
+  <li><strong>Sensible range:</strong> reject hours above 80 too, using <strong>one</strong> chained comparison in the first <code>if</code>. Keep the error message helpful.</li>
+  <li><strong>A real AI-engineering bug.</strong> Run the script with the target role <code>Maintenance Manager</code>. Why does it say "AI role"? Explain the bug in a comment in your file. Fixing it properly needs Topic 4, but see if you can make it <em>less</em> wrong today. (Hint: <code>" ai "</code>, or check what the role <code>startswith</code>.) This kind of false match is exactly what you'll be evaluating when you build LLM features later.</li>
+</ol>
+
+<div class="ask">
+  <strong>Questions? Ask me (Claude) in the terminal.</strong> Try "why is 0 falsy?" or "show me another nested if example". When you're done, send me your score and the path to your file, and I'll review it before Topic 4 (lists and loops).
+</div>
+
+<p>Quick reference: <a href="../reference/python-cheatsheet.html#topic-3">Python cheat sheet, Topic 3</a>.</p>
+
+<nav class="next">
+  <a href="0002-variables-and-strings.html">← Topic 2: Variables and strings</a>
+  <a href="0004-lists-and-loops.html">Next: Topic 4, Lists and loops →</a>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

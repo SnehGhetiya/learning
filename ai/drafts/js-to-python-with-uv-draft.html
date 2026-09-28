@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JS to Python</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Reference</nav>
+
+<h1>JS → Python</h1>
+<p class="subtitle">A cheat sheet for web developers. It grows as each lesson adds new material.</p>
+<p class="score" style="margin-top:-1rem">Python 3.14 · uv 0.12 · last updated after <a href="../lessons/0001-your-first-python-project.html">Lesson 1</a></p>
+
+<h2>Tooling: npm → uv</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>npm / Node</th><th>uv / Python</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>npm init</code></td><td><code>uv init name</code></td><td>Since uv 0.12, creates a <code>src/name/</code> package</td></tr>
+    <tr><td><code>package.json</code></td><td><code>pyproject.toml</code></td><td>Metadata, dependencies, <code>[project.scripts]</code></td></tr>
+    <tr><td><code>package-lock.json</code></td><td><code>uv.lock</code></td><td>Commit it</td></tr>
+    <tr><td><code>node_modules/</code></td><td><code>.venv/</code></td><td>Don't commit it</td></tr>
+    <tr><td><code>npm install pkg</code></td><td><code>uv add pkg</code></td><td>Updates toml + lock + installs</td></tr>
+    <tr><td><code>npm uninstall pkg</code></td><td><code>uv remove pkg</code></td><td></td></tr>
+    <tr><td><code>npm install</code> (fresh clone)</td><td><code>uv sync</code></td><td><code>uv run</code> also syncs automatically</td></tr>
+    <tr><td><code>npm run start</code></td><td><code>uv run &lt;command&gt;</code></td><td>Runs inside the project's <code>.venv</code></td></tr>
+    <tr><td><code>"bin": {...}</code></td><td><code>[project.scripts]</code></td><td><code>job-radar = "job_radar:main"</code></td></tr>
+    <tr><td><code>npx tool</code></td><td><code>uvx tool</code></td><td>Temporary environment</td></tr>
+    <tr><td><code>nvm install 22</code></td><td><code>uv python install 3.14</code></td><td><code>.python-version</code> pins it per project</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Syntax</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>JavaScript</th><th>Python</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>{ … }</code> blocks</td><td><code>:</code> + 4-space indent</td><td>Indentation <em>is</em> the syntax</td></tr>
+    <tr><td><code>// comment</code></td><td><code># comment</code></td><td></td></tr>
+    <tr><td><code>const x = 1;</code></td><td><code>x = 1</code></td><td>No keyword, no semicolon</td></tr>
+    <tr><td><code>function f(a) { return a; }</code></td><td><code>def f(a):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;return a</code></td><td></td></tr>
+    <tr><td><code>function f(): void</code> (TS)</td><td><code>def f() -&gt; None:</code></td><td>Type hints aren't enforced when the code runs</td></tr>
+    <tr><td><code>[1, 2, 3]</code> array</td><td><code>[1, 2, 3]</code> list</td><td></td></tr>
+    <tr><td><code>{ key: value }</code> object</td><td><code>{"key": value}</code> dict</td><td>Keys are quoted</td></tr>
+    <tr><td><code>obj.key</code></td><td><code>d["key"]</code></td><td>Missing key raises <code>KeyError</code></td></tr>
+    <tr><td><code>obj.key ?? 0</code></td><td><code>d.get("key", 0)</code></td><td>Safe lookup with a default</td></tr>
+    <tr><td><code>for (const x of arr)</code></td><td><code>for x in arr:</code></td><td></td></tr>
+    <tr><td><code>Object.entries(o)</code></td><td><code>d.items()</code></td><td><code>for k, v in d.items():</code></td></tr>
+    <tr><td><code>arr.length</code></td><td><code>len(arr)</code></td><td>Works on lists, dicts and strings</td></tr>
+    <tr><td><code>`Hi ${name}`</code></td><td><code>f"Hi {name}"</code></td><td><code>{x:&lt;12}</code> pads left-aligned</td></tr>
+    <tr><td><code>"#".repeat(3)</code></td><td><code>"#" * 3</code></td><td></td></tr>
+    <tr><td><code>console.log(x)</code></td><td><code>print(x)</code></td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The counting pattern</h2>
+<p>This comes up constantly in data work: tallying how often each thing appears.</p>
+<pre>counts = {}
+for item in items:
+    counts[item] = counts.get(item, 0) + 1</pre>
+
+<p class="note">Sources: <a href="https://docs.python.org/3/tutorial/">Python Tutorial</a>, <a href="https://docs.astral.sh/uv/guides/projects/">uv: Working on projects</a>.</p>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

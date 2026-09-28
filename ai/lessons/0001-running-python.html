@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Running Python</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Module 1: Python basics · Topic 1</nav>
+
+<h1>Running Python</h1>
+<p class="subtitle">Two ways to run Python code, using numbers as your first values, plus your first script.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd>You'll run Python interactively, write and run your own <code>.py</code> file, and read your first error message.</dd>
+  <dt>Time</dt><dd>About 20 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7, already installed on your machine (checked 23 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/introduction.html#using-python-as-a-calculator">The Python Tutorial §3.1: Using Python as a Calculator</a> (official, ~15 min)</dd>
+</dl>
+
+<h2>What Python is</h2>
+<p>Python is a programming language. The <strong>Python interpreter</strong> is the program that reads your Python code and runs it, line by line, from top to bottom. There's no build or compile step: you write code and run it straight away.</p>
+<p class="note">If you've used Node.js: <code>python3</code> works like <code>node</code>. Running it with no file gives an interactive prompt, and running it with a file runs that file.</p>
+<p>You can talk to the interpreter in two ways, and you'll use both all the time:</p>
+<ol>
+  <li><strong>Interactive mode</strong> (the <em>REPL</em>): type one line, and Python answers immediately. It's great for trying things out.</li>
+  <li><strong>Script files</strong>: write code in a <code>.py</code> file and run the whole file. This is how real programs are written.</li>
+</ol>
+
+<h2>1 · Interactive mode</h2>
+<ol class="steps" data-key="t1-repl">
+  <li>
+    Open a terminal and check your Python version:
+<pre><span class="p">$ </span>python3 --version
+Python 3.14.7</pre>
+  </li>
+  <li>
+    Start interactive mode by typing <code>python3</code> on its own. You'll see a <code>&gt;&gt;&gt;</code> prompt, which means Python is waiting for you. In Python 3.14 the prompt colors your code as you type (<a href="https://docs.python.org/3/whatsnew/3.14.html">What's New in 3.14</a>).
+<pre><span class="p">$ </span>python3
+<span class="p">&gt;&gt;&gt; </span>2 + 3
+5</pre>
+  </li>
+  <li>
+    Now try each of these yourself. <strong>Before you press Enter, guess the answer.</strong> Guessing first is what makes it stick.
+<pre><span class="p">&gt;&gt;&gt; </span>7 / 2
+3.5
+<span class="p">&gt;&gt;&gt; </span>7 // 2
+3
+<span class="p">&gt;&gt;&gt; </span>7 % 2
+1
+<span class="p">&gt;&gt;&gt; </span>2 ** 10
+1024</pre>
+  </li>
+  <li>
+    Leave interactive mode by typing <code>exit()</code> and pressing Enter, or press <kbd>Ctrl</kbd>+<kbd>D</kbd>.
+  </li>
+</ol>
+
+<h2>Numbers and arithmetic</h2>
+<p>Python has two main kinds of numbers (<a href="https://docs.python.org/3/tutorial/introduction.html#numbers">tutorial §3.1.1</a>):</p>
+<ul>
+  <li><strong><code>int</code></strong> (integer): whole numbers such as <code>7</code>, <code>-3</code> or <code>1024</code>.</li>
+  <li><strong><code>float</code></strong> (floating-point number): numbers with a decimal point, such as <code>3.5</code> or <code>4.0</code>.</li>
+</ul>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>+</code> <code>-</code> <code>*</code></td><td>add, subtract, multiply</td><td><code>6 * 7</code></td><td><code>42</code></td></tr>
+    <tr><td><code>/</code></td><td>division, <strong>always gives a float</strong></td><td><code>8 / 2</code></td><td><code>4.0</code></td></tr>
+    <tr><td><code>//</code></td><td>floor division: divide, then drop the fraction</td><td><code>17 // 5</code></td><td><code>3</code></td></tr>
+    <tr><td><code>%</code></td><td>remainder (called "modulo")</td><td><code>17 % 5</code></td><td><code>2</code></td></tr>
+    <tr><td><code>**</code></td><td>power</td><td><code>2 ** 10</code></td><td><code>1024</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">Watch out, JavaScript habit</span>
+  In JavaScript, <code>//</code> starts a comment. In Python, <code>//</code> is <strong>floor division</strong>. Comments in Python start with <code>#</code>.
+</div>
+
+<p class="note">Want to see this for yourself? Try <code>0.1 + 0.2</code>. You'll get <code>0.30000000000000004</code>, exactly as in JavaScript. This is normal for floats in every language (<a href="https://docs.python.org/3/tutorial/floatingpoint.html">tutorial §15</a>).</p>
+<p>Two details worth knowing:</p>
+<ul>
+  <li>Python's <code>int</code> has <strong>no size limit</strong>. <code>2 ** 100</code> gives the exact answer, <code>1267650600228229401496703205376</code>.</li>
+  <li>Parentheses work as in maths: <code>(2 + 3) * 4</code> is <code>20</code>.</li>
+</ul>
+
+<h3>Variables</h3>
+<p>A <strong>variable</strong> is a name that refers to a value. You create one with <code>=</code>. Python has no keyword such as <code>let</code> or <code>const</code>: you just write the name.</p>
+<pre><span class="p">&gt;&gt;&gt; </span>hours_per_week = 4
+<span class="p">&gt;&gt;&gt; </span>hours_per_week * 52
+208</pre>
+<p>Python names use <code>snake_case</code>: lowercase words joined by underscores (<a href="https://peps.python.org/pep-0008/#function-and-variable-names">PEP 8, Python's style guide</a>). Topic 2 covers variables in depth.</p>
+
+<h2>2 · Your first script</h2>
+<p>Interactive mode forgets everything when you exit. To keep your code, save it in a file.</p>
+
+<ol class="steps" data-key="t1-script">
+  <li>
+    Make a folder for all your topic exercises and open a new file in Sublime Text:
+<pre><span class="p">$ </span>mkdir -p ~/Music/learning/ai/practice
+<span class="p">$ </span>cd ~/Music/learning/ai/practice
+<span class="p">$ </span>subl 01_study_plan.py</pre>
+  </li>
+  <li>
+    Type this in yourself rather than pasting it. Typing it builds the habit.
+<p class="file-label">01_study_plan.py</p>
+<pre><span class="c"># Study plan calculator: how long will this course take me?</span>
+hours_per_week = 4
+total_hours = 180  <span class="c"># a rough estimate for the whole course</span>
+
+weeks = total_hours / hours_per_week
+print("Weeks to finish:", weeks)
+print("Whole months:", weeks // 4)</pre>
+    Save the file (<kbd>Ctrl</kbd>+<kbd>S</kbd>).
+  </li>
+  <li>
+    Run it:
+<pre><span class="p">$ </span>python3 01_study_plan.py
+Weeks to finish: 45.0
+Whole months: 11.0</pre>
+  </li>
+  <li>
+    <strong>Break it on purpose.</strong> Delete the last <code>)</code> on the final line, save, and run again. You'll see your first error:
+<pre>  File "01_study_plan.py", line 7
+    print("Whole months:", weeks // 4
+         ^
+SyntaxError: '(' was never closed</pre>
+    Read it from the bottom up. The <strong>last line</strong> says what went wrong (a <code>SyntaxError</code>: the code isn't valid Python). The lines above say <strong>where</strong>: which file, which line, with a <code>^</code> pointing at the spot. Put the <code>)</code> back and run it again.
+  </li>
+</ol>
+
+<h3>What's new in that file</h3>
+<p><strong><code>#</code> starts a comment.</strong> Python ignores everything from <code>#</code> to the end of the line. Comments are notes for humans.</p>
+<p><strong><code>print()</code> shows output.</strong> In interactive mode, Python shows every result automatically. <strong>A script shows nothing unless you <code>print</code> it.</strong> <code>print</code> can take several values separated by commas and puts a space between them (<a href="https://docs.python.org/3/builtins/functions.html#print">docs</a>).</p>
+<p><strong>Why <code>45.0</code> and not <code>45</code>?</strong> Because <code>/</code> always gives a float, even when the division comes out even. Then <code>weeks // 4</code> floor-divides a float, so the result is also a float: <code>11.0</code>.</p>
+
+<h2>Practice: recall, don't reread</h2>
+<p>Answer from memory. If it feels a bit hard, that's good: the effort of remembering is what makes it stick.</p>
+
+<div class="quiz predict" data-expect="4.0">
+  <p class="q">1. What does Python show?</p>
+<pre>&gt;&gt;&gt; 8 / 2</pre>
+  <div class="explain"><code>/</code> <strong>always</strong> returns a float, even when the division is exact, so the answer is <code>4.0</code>, not <code>4</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="3">
+  <p class="q">2. What does Python show?</p>
+<pre>&gt;&gt;&gt; 17 // 5</pre>
+  <div class="explain">17 ÷ 5 = 3.4, and floor division drops the fraction, giving <code>3</code>. Both inputs are ints, so the result is an int too.</div>
+</div>
+
+<div class="quiz predict" data-expect="1">
+  <p class="q">3. What does Python show?</p>
+<pre>&gt;&gt;&gt; 10 % 3</pre>
+  <div class="explain">10 ÷ 3 = 3 with <strong>1 left over</strong>. <code>%</code> gives the remainder, <code>1</code>. It's often used to check whether a number is even: <code>n % 2 == 0</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="8">
+  <p class="q">4. What does Python show?</p>
+<pre>&gt;&gt;&gt; 2 ** 3</pre>
+  <div class="explain"><code>**</code> is power: 2 × 2 × 2 = <code>8</code>.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">5. A script file contains only this line: <code>3 + 4</code>. You run it with <code>python3</code>. What happens?</p>
+  <div class="options">
+    <button class="opt" data-correct>Nothing is shown at all</button>
+    <button class="opt">It shows the number 7</button>
+    <button class="opt">It raises a syntax error</button>
+    <button class="opt">It shows the text 3+4</button>
+  </div>
+  <div class="explain">Python calculates <code>7</code> and then throws it away. Only interactive mode shows results automatically. In a script, you need <code>print(3 + 4)</code>.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">6. In Python, what does <code>//</code> mean?</p>
+  <div class="options">
+    <button class="opt" data-correct>Divide and drop the fraction</button>
+    <button class="opt">Mark the start of comments</button>
+    <button class="opt">Divide and round to nearest</button>
+    <button class="opt">Divide and keep the decimals</button>
+  </div>
+  <div class="explain"><code>//</code> is floor division: <code>7 // 2</code> is <code>3</code>. Comments use <code>#</code>, and <code>/</code> is the division that keeps the decimals.</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Answer from memory</h3>
+<details class="recall">
+  <summary>What are the two ways to run Python code?</summary>
+  <p>Interactive mode (type <code>python3</code> and get a <code>&gt;&gt;&gt;</code> prompt) and script files (<code>python3 file.py</code>).</p>
+</details>
+<details class="recall">
+  <summary>What's the difference between <code>int</code> and <code>float</code>?</summary>
+  <p><code>int</code> is a whole number (<code>7</code>). <code>float</code> has a decimal point (<code>3.5</code>, <code>4.0</code>). <code>/</code> always produces a float.</p>
+</details>
+<details class="recall">
+  <summary>An error message appears. Which line do you read first?</summary>
+  <p>The <strong>last</strong> line: it names the error type and what went wrong. The lines above it show where the error happened.</p>
+</details>
+
+<h2>Stretch challenge</h2>
+<p>Edit <code>01_study_plan.py</code> so it's about <em>you</em>:</p>
+<ol>
+  <li>Set <code>hours_per_week</code> to the hours you really plan to study.</li>
+  <li>Add a line that prints how many <strong>minutes</strong> you study each week.</li>
+  <li>Use <code>%</code> to print how many weeks are left over after the whole months. (Hint: something <code>% 4</code>.)</li>
+</ol>
+
+<div class="ask">
+  <strong>Anything unclear? Ask me (Claude) in the terminal.</strong> I'm your teacher for this course. You can paste any error or say "explain floor division again differently". When you're done, tell me your quiz score and show me your stretch-challenge code, and I'll review it before Topic 2.
+</div>
+
+<p>Quick reference: <a href="../reference/python-cheatsheet.html">Python cheat sheet</a>.</p>
+
+<nav class="next">
+  <a href="../index.html">← Course home</a>
+  <a href="0002-variables-and-strings.html">Next: Topic 2, Variables and strings →</a>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>
