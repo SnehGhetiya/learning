@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dictionaries, Tuples and Sets</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main class="page">
+
+<nav class="crumbs"><a href="../index.html">AI Engineer Course</a> · Module 1: Python basics · Topic 5</nav>
+
+<h1>Dictionaries, tuples and sets</h1>
+<p class="subtitle">Three more ways to hold data: look things up by name, bundle fixed values together, and keep only unique items.</p>
+
+<dl class="meta">
+  <dt>You'll win</dt><dd><code>05_study_plan_v5.py</code>: each module keeps its name and hours together, shows a progress status, and an AI role gets a "skills you have / skills to learn" report.</dd>
+  <dt>Time</dt><dd>About 40 minutes</dd>
+  <dt>Versions</dt><dd>Python 3.14.7 (checked 28 Sep 2026)</dd>
+  <dt>Primary source</dt><dd><a href="https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences">The Python Tutorial §5.3–5.6: Tuples, Sets, Dictionaries, Looping Techniques</a> (official, ~20 min)</dd>
+</dl>
+
+<h2>Warm-up: from Topic 4</h2>
+
+<div class="quiz predict" data-expect="capstone">
+  <p class="q">What does this print?</p>
+<pre>modules = ["python", "llm", "capstone"]
+print(modules[-1])</pre>
+  <div class="explain"><code>-1</code> is the last item.</div>
+</div>
+
+<div class="quiz predict" data-expect="3">
+  <p class="q">What does this print?</p>
+<pre>count = 0
+for word in "ai ml llm".split():
+    count += 1
+print(count)</pre>
+  <div class="explain"><code>.split()</code> gives 3 words, so the loop runs 3 times.</div>
+</div>
+
+<h3>Your Topic 4 stretch tasks, finished</h3>
+<p>We completed the three stretch tasks in <code>04_study_plan_v4.py</code>. Here's what changed, since this topic builds on it:</p>
+<ul>
+  <li><strong>Keywords:</strong> <code>ai_keywords = ["ai", "ml", "llm"]</code> plus a loop that sets <code>is_ai_role = True</code> and <code>break</code>s on the first match. "ML Engineer" and "LLM Engineer" are now detected.</li>
+  <li><strong>Longest module:</strong> two "best so far" variables, <code>longest_hours</code> <em>and</em> <code>longest_name</code>, updated together in the same <code>if</code>. Output: <code>Longest module: LLM fundamentals (45 h)</code>.</li>
+  <li><strong>Skills:</strong> <code>.strip()</code> on input, so blank-looking lines stop the loop, and <code>if my_skills:</code> so an empty list prints nothing.</li>
+</ul>
+<p>Notice two awkward spots. You had to keep <code>modules</code> and <code>module_hours</code> in step by index, and you needed two variables to remember one "best module". This topic's tools fix both.</p>
+
+<h2>1 · Dictionaries</h2>
+<p>A <strong>dictionary</strong> (<code>dict</code>) stores <strong>key → value</strong> pairs inside <code>{ }</code>. You look values up by key, not by position. It's Python's version of a JavaScript object used as a map (<a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">docs</a>).</p>
+<pre>module = {"name": "LLM fundamentals", "hours": 45}
+module["name"]           <span class="c"># 'LLM fundamentals'</span>
+module["hours"] = 50     <span class="c"># change a value</span>
+module["done"] = False   <span class="c"># add a new key</span>
+del module["done"]       <span class="c"># remove a key</span>
+len(module)              <span class="c"># 2 pairs</span></pre>
+
+<div class="callout">
+  <span class="label">JS habit to drop: no dot access</span>
+  In JS you'd write <code>module.name</code>. In Python that's an error for a dict. Always use <code>module["name"]</code>, with quotes. (Dot access is for objects made from classes, in Topic 11.)
+</div>
+
+<h3>Missing keys: <code>[ ]</code> vs <code>.get()</code></h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Code</th><th>If the key is missing</th></tr></thead>
+  <tbody>
+    <tr><td><code>progress["Capstone"]</code></td><td><code>KeyError: 'Capstone'</code> (JS would give <code>undefined</code>)</td></tr>
+    <tr><td><code>progress.get("Capstone")</code></td><td><code>None</code></td></tr>
+    <tr><td><code>progress.get("Capstone", "not started")</code></td><td><code>'not started'</code>, the default you chose</td></tr>
+    <tr><td><code>"Capstone" in progress</code></td><td><code>False</code>. <code>in</code> checks <strong>keys only</strong>, never values</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Use <code>[ ]</code> when the key <em>must</em> be there (a crash tells you about a bug). Use <code>.get()</code> when missing is normal.</p>
+
+<h3>Looping over a dictionary</h3>
+<p><code>.items()</code> gives you each key and value together (<a href="https://docs.python.org/3/tutorial/datastructures.html#looping-techniques">docs</a>). Dicts remember the order you added keys in.</p>
+<pre>levels = {"python": 2, "rag": 1}
+for skill, level in levels.items():
+    print(f"{skill}: {level}/5")
+<span class="c"># python: 2/5
+# rag: 1/5</span></pre>
+<p class="note">A plain <code>for key in levels:</code> loops over the keys only. The <code>skill, level</code> part is <em>tuple unpacking</em>, explained next.</p>
+
+<h3>Keys must be unchangeable</h3>
+<p>Strings, numbers and tuples can be keys. Lists can't, because they can change: <code>{["a"]: 1}</code> gives <code>TypeError: cannot use 'list' as a dict key (unhashable type: 'list')</code>. Values can be anything, including lists and other dicts.</p>
+
+<h2>2 · Tuples</h2>
+<p>A <strong>tuple</strong> is like a list inside <code>( )</code>, but <strong>immutable</strong>: once made, it can't change (<a href="https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences">docs</a>). Use it for a small, fixed bundle of values that belong together, like a (name, hours) pair.</p>
+<pre>longest = ("LLM fundamentals", 45)
+longest[0]           <span class="c"># 'LLM fundamentals': indexing works like lists</span>
+longest[1] = 50      <span class="c"># TypeError: 'tuple' object does not support item assignment</span>
+longest = ("Capstone", 50)   <span class="c"># fine: this makes a NEW tuple, it doesn't change the old one</span></pre>
+
+<h3>Unpacking</h3>
+<p>You can pull a tuple apart into variables in one line. It's like JS array destructuring <code>const [name, hours] = longest</code>, without the brackets:</p>
+<pre>name, hours = longest        <span class="c"># name = 'Capstone', hours = 50</span>
+a, b = b, a                  <span class="c"># swap two variables</span></pre>
+
+<div class="callout">
+  <span class="label">The comma makes the tuple</span>
+  <code>("ai")</code> is just the string <code>'ai'</code> in brackets. A one-item tuple needs a trailing comma: <code>("ai",)</code>. The empty tuple is <code>()</code>.
+</div>
+
+<h2>3 · Sets</h2>
+<p>A <strong>set</strong> is an unordered collection with <strong>no duplicates</strong> (<a href="https://docs.python.org/3/tutorial/datastructures.html#sets">docs</a>). It's like JS <code>new Set()</code>, with built-in maths operators:</p>
+<pre>have = {"python", "rag", "python"}   <span class="c"># → {'python', 'rag'}: the duplicate is dropped</span>
+need = {"python", "evals", "pytorch"}
+have.add("sql")      <span class="c"># sets are mutable; .add() instead of .append()</span>
+have &amp; need          <span class="c"># {'python'}             in BOTH (intersection)</span>
+need - have          <span class="c"># {'evals', 'pytorch'}   in need but NOT in have (difference)</span>
+have | need          <span class="c"># everything from either (union)</span></pre>
+<ul>
+  <li>Sets have <strong>no order and no indexes</strong>: <code>have[0]</code> is an error. The printed order can differ from run to run. Use <code>sorted(have)</code> to get a sorted <em>list</em> when you need a stable order.</li>
+  <li><code>set(words)</code> turns a list into a set, dropping duplicates.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">Trap: <code>{}</code> is an empty dict</span>
+  <code>{}</code> makes an empty <strong>dictionary</strong>, not an empty set. For an empty set, write <code>set()</code>.
+</div>
+
+<h3>Which one should I use?</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Type</th><th>Looks like</th><th>Use it for</th></tr></thead>
+  <tbody>
+    <tr><td>list</td><td><code>[1, 2]</code></td><td>an ordered collection that grows or changes</td></tr>
+    <tr><td>dict</td><td><code>{"k": 1}</code></td><td>looking things up by name; a record with named fields</td></tr>
+    <tr><td>tuple</td><td><code>(1, 2)</code></td><td>a small fixed bundle; returning several values (Topic 6)</td></tr>
+    <tr><td>set</td><td><code>{1, 2}</code></td><td>unique items; "what's in A but not B?"</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">Why this matters for AI work: API responses from LLMs arrive as JSON, which becomes dicts and lists in Python. A chat is a list of dicts like <code>{"role": "user", "content": "..."}</code>. You'll see this shape in every Module 3 lesson.</p>
+
+<h2>Build it: study plan v5</h2>
+<ol class="steps" data-key="t5-build">
+  <li>
+    Create <code>05_study_plan_v5.py</code>. The two lists from v4 become <strong>one list of dicts</strong>, so each module's name and hours can't get out of step.
+<p class="file-label">05_study_plan_v5.py</p>
+<pre><span class="c"># Study plan v5: dictionaries, tuples and sets.</span>
+name = input("Your name: ").strip().title()
+if not name:
+    name = "Friend"
+target_role = input("Target role: ").strip()
+
+while True:
+    hours_per_week = float(input("Hours per week (1-80): "))
+    if 1 &lt;= hours_per_week &lt;= 80:
+        break
+    print("Please enter a number from 1 to 80.")
+
+<span class="c"># A set: duplicates are dropped automatically.</span>
+my_skills = set()
+while True:
+    skill = input("Add a skill (blank to finish): ").strip().lower()
+    if not skill:
+        break
+    my_skills.add(skill)
+
+<span class="c"># A list of dictionaries: each module keeps its name and hours together.</span>
+modules = [
+    {"name": "Python basics", "hours": 40},
+    {"name": "Python for web and APIs", "hours": 25},
+    {"name": "LLM fundamentals", "hours": 45},
+    {"name": "LangChain and LangGraph", "hours": 25},
+    {"name": "Classic ML", "hours": 30},
+    {"name": "Neural networks", "hours": 35},
+    {"name": "Fine-tuning", "hours": 25},
+    {"name": "Capstone", "hours": 45},
+]
+progress = {"Python basics": "in progress"}  <span class="c"># module name -> status</span>
+
+total_hours = 0
+longest = ("", 0)  <span class="c"># a tuple: (name, hours) of the best so far</span>
+for module in modules:
+    total_hours += module["hours"]
+    if module["hours"] &gt; longest[1]:
+        longest = (module["name"], module["hours"])
+weeks = total_hours / hours_per_week
+
+print("=" * 40)
+print(f"Study plan for {name} as {target_role}")
+print(f"{len(modules)} modules, {total_hours} hours, {weeks:.1f} weeks")
+print("-" * 40)
+
+for i in range(len(modules)):
+    module = modules[i]
+    status = progress.get(module["name"], "not started")
+    print(f"{i + 1}. {module['name']} ({module['hours']} h): {status}")
+
+longest_name, longest_hours = longest  <span class="c"># unpack the tuple</span>
+print(f"Longest module: {longest_name} ({longest_hours} h)")
+
+words = target_role.lower().replace("-", " ").replace("/", " ").split()
+ai_keywords = {"ai", "ml", "llm"}
+if ai_keywords &amp; set(words):  <span class="c"># a non-empty set is truthy</span>
+    ai_skills = {"python", "llm apis", "rag", "evals", "pytorch"}
+    print("-" * 40)
+    print("AI role: Modules 3 and 4 will matter most.")
+    print(f"Skills you have: {', '.join(sorted(ai_skills &amp; my_skills))}")
+    print(f"Skills to learn: {', '.join(sorted(ai_skills - my_skills))}")
+print("=" * 40)</pre>
+    <p class="note">Inside the f-strings, <code>module['name']</code> uses single quotes so they don't clash with the outer double quotes. (Python 3.12+ allows matching quotes too, but mixing them is easier to read.) And look at the AI check: the whole Topic 4 keyword loop became one line, <code>ai_keywords &amp; set(words)</code>.</p>
+  </li>
+  <li>
+    Run it with <code>Head of AI</code>, <code>10</code> hours, and the skills <code>Python</code>, <code>RAG</code>, <code>python</code>, <code>sql</code>, then a blank line:
+<pre>========================================
+Study plan for Ada as Head of AI
+8 modules, 270 hours, 27.0 weeks
+----------------------------------------
+1. Python basics (40 h): in progress
+2. Python for web and APIs (25 h): not started
+3. LLM fundamentals (45 h): not started
+4. LangChain and LangGraph (25 h): not started
+5. Classic ML (30 h): not started
+6. Neural networks (35 h): not started
+7. Fine-tuning (25 h): not started
+8. Capstone (45 h): not started
+Longest module: LLM fundamentals (45 h)
+----------------------------------------
+AI role: Modules 3 and 4 will matter most.
+Skills you have: python, rag
+Skills to learn: evals, llm apis, pytorch
+========================================</pre>
+    You typed "python" twice, but the set kept it once. "sql" isn't an AI skill here, so the <code>&amp;</code> leaves it out.
+  </li>
+  <li>
+    <strong>Break it on purpose.</strong> In the status loop, change <code>module["name"]</code> to <code>module["nme"]</code> and run it. You'll get <code>KeyError: 'nme'</code>. A typo in a key crashes loudly instead of quietly giving <code>undefined</code> like JS. Fix it.
+  </li>
+  <li>
+    <strong>Break it differently.</strong> Below the line <code>longest = ("", 0)</code>, add <code>longest[1] = 10</code>. You'll get <code>TypeError: 'tuple' object does not support item assignment</code>. That's why the loop <em>replaces</em> the whole tuple instead. Remove the line.
+  </li>
+</ol>
+
+<h2>Practice: recall, don't reread</h2>
+
+<div class="quiz predict" data-expect="1">
+  <p class="q">1. What does this print?</p>
+<pre>levels = {"python": 3, "rag": 1}
+print(levels["rag"])</pre>
+  <div class="explain">Look up by key: <code>"rag"</code> maps to <code>1</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="0">
+  <p class="q">2. What does this print?</p>
+<pre>levels = {"python": 3, "rag": 1}
+print(levels.get("evals", 0))</pre>
+  <div class="explain"><code>"evals"</code> isn't a key, so <code>.get()</code> returns the default, <code>0</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="False">
+  <p class="q">3. What does this print?</p>
+<pre>levels = {"python": 3, "rag": 1}
+print(3 in levels)</pre>
+  <div class="explain"><code>in</code> on a dict checks <strong>keys</strong>. <code>3</code> is a value, not a key.</div>
+</div>
+
+<div class="quiz predict" data-expect="2">
+  <p class="q">4. What does this print?</p>
+<pre>print(len({"rag", "evals", "rag"}))</pre>
+  <div class="explain">It's a set, so the second <code>"rag"</code> is dropped. Two items are left.</div>
+</div>
+
+<div class="quiz predict" data-expect="45">
+  <p class="q">5. What does this print?</p>
+<pre>name, hours = ("Capstone", 45)
+print(hours)</pre>
+  <div class="explain">Unpacking puts the first item in <code>name</code> and the second in <code>hours</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="&lt;class 'dict'&gt;||dict">
+  <p class="q">6. What does this print?</p>
+<pre>print(type({}))</pre>
+  <div class="explain"><code>{}</code> is an empty <strong>dict</strong>. An empty set is <code>set()</code>.</div>
+</div>
+
+<div class="quiz predict" data-expect="{'rag'}||{&quot;rag&quot;}">
+  <p class="q">7. What does this print?</p>
+<pre>have = {"python", "rag"}
+need = {"rag", "evals"}
+print(have &amp; need)</pre>
+  <div class="explain"><code>&amp;</code> keeps items that are in <strong>both</strong> sets.</div>
+</div>
+
+<div class="quiz">
+  <p class="q">8. Which of these can't be a dictionary key?</p>
+  <div class="options">
+    <button class="opt" data-correct><code>["ai", "ml"]</code></button>
+    <button class="opt"><code>"ai"</code></button>
+    <button class="opt"><code>42</code></button>
+    <button class="opt"><code>("ai", "ml")</code></button>
+  </div>
+  <div class="explain">Keys must be unchangeable. A list can change, so it can't be a key. A tuple can't change, so it can.</div>
+</div>
+
+<p class="score"></p>
+
+<h3>Answer from memory</h3>
+<details class="recall">
+  <summary>When would you use <code>d["key"]</code>, and when <code>d.get("key", default)</code>?</summary>
+  <p><code>[ ]</code> when the key must exist, because a missing key is a bug and the <code>KeyError</code> tells you. <code>.get()</code> when a missing key is normal and a default makes sense.</p>
+</details>
+<details class="recall">
+  <summary>What's the difference between a list and a tuple?</summary>
+  <p>A list is mutable (<code>append</code>, change items). A tuple is immutable: you can only make a new one. Tuples suit small fixed bundles like <code>(name, hours)</code>.</p>
+</details>
+<details class="recall">
+  <summary>How do you find the skills you still need to learn, given two sets?</summary>
+  <p><code>need - have</code>: the items in <code>need</code> that aren't in <code>have</code>.</p>
+</details>
+
+<h2>Stretch challenge</h2>
+<ol>
+  <li><strong>Skill levels:</strong> change <code>my_skills</code> into a dict. After each skill, also ask "Level 1-5: " and store <code>my_skills[skill] = level</code>. At the end, loop with <code>.items()</code> and print every skill below level 3 as "to practise". (Hint: <code>set(my_skills)</code> gives the set of keys, so the "have/learn" lines can still work.)</li>
+  <li><strong>Word counter:</strong> this is the heart of the <code>job-radar</code> project. Given <code>posting = "python rag python evals rag python"</code>, build a dict of how many times each word appears: <code>{'python': 3, 'rag': 2, 'evals': 1}</code>. (Hint: <code>counts[word] = counts.get(word, 0) + 1</code>.)</li>
+  <li><strong>Ties:</strong> "LLM fundamentals" and "Capstone" both have 45 hours, but only one is printed. After finding <code>longest_hours</code>, loop again and collect <em>every</em> module with that many hours into a list, then print them joined with <code>" and "</code>.</li>
+</ol>
+
+<div class="ask">
+  <strong>Questions? Ask me (Claude) in the terminal.</strong> Try "why can't a list be a dict key?" or "what does a real LLM API response look like as a dict?". When you're done, send me your score and file path, and I'll review them before Topic 6 (functions).
+</div>
+
+<p>Quick reference: <a href="../reference/python-cheatsheet.html#topic-5">Python cheat sheet, Topic 5</a>.</p>
+
+<nav class="next">
+  <a href="0004-lists-and-loops.html">← Topic 4: Lists and loops</a>
+  <a href="0006-functions.html">Next: Topic 6, Functions →</a>
+</nav>
+
+</main>
+<script src="../assets/components.js"></script>
+</body>
+</html>

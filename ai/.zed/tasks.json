@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Live preview current HTML file",
+    "command": "npx -y live-server --open=\"$ZED_RELATIVE_FILE\"",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  }
+]

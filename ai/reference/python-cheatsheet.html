@@ -13,7 +13,7 @@
 
 <h1>Python cheat sheet</h1>
 <p class="subtitle">One section per topic. Each lesson adds its own.</p>
-<p class="score" style="margin-top:-1rem">Python 3.14 · last updated after <a href="../lessons/0004-lists-and-loops.html">Topic 4</a></p>
+<p class="score" style="margin-top:-1rem">Python 3.14 · last updated after <a href="../lessons/0006-functions.html">Topic 6</a></p>
 
 <h2 id="topic-1">Topic 1 · Running Python</h2>
 <div class="table-wrap">
@@ -144,7 +144,47 @@ while True:                  <span class="c"># repeat until...</span>
   <li><code>None</code> is Python's "no value" (like JS <code>null</code>).</li>
 </ul>
 
-<p class="note">Sources: <a href="https://docs.python.org/3/tutorial/introduction.html">Python Tutorial §3</a>, <a href="https://docs.python.org/3/tutorial/controlflow.html">§4</a>, <a href="https://docs.python.org/3/tutorial/datastructures.html">§5.1</a>, <a href="https://docs.python.org/3/tutorial/inputoutput.html">§7</a>.</p>
+<h2 id="topic-5">Topic 5 · Dictionaries, tuples and sets</h2>
+<pre>module = {"name": "Capstone", "hours": 45}   <span class="c"># dict: key → value</span>
+module["hours"]                <span class="c"># 45 (KeyError if missing; no dot access!)</span>
+module.get("done", False)      <span class="c"># default instead of an error</span>
+module["done"] = True          <span class="c"># add or change</span>
+del module["done"]
+"name" in module               <span class="c"># checks KEYS only</span>
+for key, value in module.items():
+    print(key, value)</pre>
+<pre>longest = ("Capstone", 45)     <span class="c"># tuple: fixed, immutable bundle</span>
+name, hours = longest          <span class="c"># unpacking</span>
+one = ("ai",)                  <span class="c"># one-item tuple needs the comma</span>
+
+have = {"python", "rag"}       <span class="c"># set: unique, unordered, no indexes</span>
+empty = set()                  <span class="c"># {} is an empty DICT</span>
+have.add("sql")
+have &amp; need   need - have   have | need   <span class="c"># both · missing · either</span>
+sorted(have)                   <span class="c"># stable order as a list</span></pre>
+<ul>
+  <li>Dict keys must be unchangeable (str, number, tuple). A list key gives <code>TypeError: cannot use 'list' as a dict key</code>.</li>
+  <li>list = ordered and changing · dict = look up by name · tuple = small fixed bundle · set = unique items.</li>
+</ul>
+
+<h2 id="topic-6">Topic 6 · Functions</h2>
+<pre>def line(char="-", width=40):  <span class="c"># parameters; defaults go last</span>
+    """Docstring: what it does."""
+    return char * width        <span class="c"># send a value back; ends the function</span>
+
+line()  line("=")  line(width=10)   <span class="c"># positional first, then keyword</span>
+
+def summarise(modules):
+    return total, top          <span class="c"># several values = one tuple</span>
+total, top = summarise(modules)</pre>
+<ul>
+  <li>No <code>return</code> → the function returns <code>None</code>. <code>print</code> shows; <code>return</code> gives back.</li>
+  <li>Variables made inside a function are local. Pass data in as arguments and get results out with <code>return</code>; avoid <code>global</code>.</li>
+  <li>Never use <code>[]</code> or <code>{}</code> as a default: use <code>None</code> and create it inside.</li>
+  <li>Define a function above the code that calls it (no hoisting).</li>
+</ul>
+
+<p class="note">Sources: <a href="https://docs.python.org/3/tutorial/introduction.html">Python Tutorial §3</a>, <a href="https://docs.python.org/3/tutorial/controlflow.html">§4, 4.8–4.9</a>, <a href="https://docs.python.org/3/tutorial/datastructures.html">§5.1–5.6</a>, <a href="https://docs.python.org/3/tutorial/inputoutput.html">§7</a>.</p>
 
 </main>
 <script src="../assets/components.js"></script>

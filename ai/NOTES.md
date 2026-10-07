@@ -10,14 +10,14 @@
 - **~10 h/week** (confirmed 2026-09-24, LR-0005) and free-only. Topics can be fuller (30–40 min) and richer in practice.
 
 ## Environment (checked 2026-09-23)
-- Linux, zsh, Python 3.14.7 installed, Node installed, Homebrew (linuxbrew) available.
-- `uv` not installed yet (it's introduced in Module 1, Topic 10). Editor: **Sublime Text** (`subl`). Also has **LM Studio** installed (useful for local models in Module 2, alongside or instead of Ollama).
-- Practice files live in `~/Music/learning/ai/practice/NN_name.py`; module projects in `~/Music/learning/ai/projects/`.
+- Now on macOS (Darwin), zsh, Python 3.14.7 installed (was Linux at first), Node installed, Homebrew (linuxbrew) available.
+- `uv` not installed yet (it's introduced in Module 1, Topic 10). Editor: **Sublime Text** (`subl`) at first, now **Zed** (with a linter, likely ruff; seen 2026-10-06). Also has **LM Studio** installed (useful for local models in Module 2, alongside or instead of Ollama).
+- Practice files live in `~/Documents/learning/ai/practice/NN_name.py`; module projects in `~/Documents/learning/ai/projects/`.
 - No NVIDIA GPU, 30 GB RAM, 8 cores → local Ollama with 7–8B quantized models is OK; use free Colab/Kaggle for training/fine-tuning.
 
 ## Course structure (tentative; rendered in `index.html`)
 Modules, each = topic lessons → module project. About 6 months at ~10 h/week.
-1. **Python basics**: 1 running Python & numbers ✅ done · 2 variables & strings ✅ done (8/8) · 3 booleans & if/else ✅ done (10/10) · 4 lists & loops (written 2026-09-24) · 5 dicts, tuples, sets · 6 functions · 7 built-ins & comprehensions · 8 errors & exceptions · 9 files & JSON · 10 modules, packages & uv · 11 classes & dataclasses · 12 type hints → **Project: `job-radar` CLI** (reuse `drafts/phase1-project-job-radar-draft.html`)
+1. **Python basics**: 1 running Python & numbers ✅ done · 2 variables & strings ✅ done (8/8) · 3 booleans & if/else ✅ done (10/10) · 4 lists & loops ✅ done (10/10) · 5 dicts, tuples, sets ✅ done (8/10) · 6 functions ✅ done (9/10) · 7 built-ins & comprehensions · 8 errors & exceptions · 9 files & JSON · 10 modules, packages & uv · 11 classes & dataclasses · 12 type hints → **Project: `job-radar` CLI** (reuse `drafts/phase1-project-job-radar-draft.html`)
 2. **Python for web & APIs**: HTTP with httpx · async/await · Pydantic · FastAPI → **Project: job-radar API**
 3. **LLM fundamentals**: what LLMs are & tokens · first local call (Ollama/LM Studio) · first free API call · prompting · structured output · tool calling · embeddings · RAG · evals → **Project: skill extractor + Q&A over postings**
 4. **LangChain & LangGraph** (v1.x: `create_agent`, middleware, LangGraph runtime; verify at lesson time) → **Project: agent version of job-radar**
