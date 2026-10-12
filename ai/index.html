@@ -16,19 +16,20 @@
 
 <dl class="meta">
   <dt>Mission</dt><dd>Get hired as an AI engineer (<a href="MISSION.md">MISSION.md</a>)</dd>
-  <dt>Pace</dt><dd>About 10 hours a week, with topic lessons of 30–40 minutes (about 6 months in total)</dd>
+  <dt>Pace</dt><dd>About 5–6 hours a week, planned in <strong>sessions</strong> (about 2.5 h each, two a week). About 46 sessions, finishing around mid-to-late March 2027. The capstone ships around the end of January, so you can start applying while you work through the from-scratch module.</dd>
+  <dt>Books</dt><dd>📖 <em>Fluent Python</em>, 2nd ed. (Ramalho): selected sections · 📗 <em>Build a Large Language Model (From Scratch)</em> (Raschka): read in full (PDFs in <code>~/Downloads</code>)</dd>
   <dt>Cost</dt><dd>Free: local models, free API tiers and free cloud GPUs</dd>
   <dt>Versions</dt><dd>Checked against official docs when each lesson is written</dd>
 </dl>
 
 <h2>How the course works</h2>
-<p>Every module follows the same three steps:</p>
+<p>Every session has the same three parts: <strong>read, learn with Claude, build</strong>.</p>
 <ol>
-  <li><strong>Topics:</strong> one concept per lesson, taught from the ground up, with exercises that check your answers instantly.</li>
-  <li><strong>Module project:</strong> a real program that combines everything from that module's topics.</li>
-  <li><strong>Next module:</strong> it builds on the last one.</li>
+  <li><strong>Read (30–40 min):</strong> the book section listed for the session. Fine to do before the session, in a spare half hour.</li>
+  <li><strong>Learn with Claude (≈ 40 min):</strong> a short lesson that connects the reading to current Python and tools, a quiz with instant feedback, and your questions. Ask about anything in the book you didn't get.</li>
+  <li><strong>Build (≈ 60–70 min):</strong> add to the running project. Each module still ends with a project.</li>
 </ol>
-<p class="note">This is a plan, not a contract. The order and pace adjust to how your lessons go.</p>
+<p class="note">Books age; docs don't. <em>Fluent Python</em> was tested on Python 3.10 and you're on 3.14, so lessons point out what changed (for example newer generic syntax and lazy annotations). <em>Fluent Python</em>'s own preface says it's hard for beginners, so we read only the sections that match what we're building. Raschka's code runs on a regular laptop, and the official notebooks are at <a href="https://github.com/rasbt/LLMs-from-scratch">rasbt/LLMs-from-scratch</a>. When a book and the official docs disagree, the docs win.</p>
 
 <h2>Reference</h2>
 <ul>
@@ -36,109 +37,105 @@
 </ul>
 
 <h2>Modules</h2>
+<p class="note">Plan updated 2026-10-12: books added, ~5 months (<a href="learning-records/0010-current-plan-books-ai-projects-5-months.md">LR-0010</a>). 📖 FP = <em>Fluent Python</em> (section names, with PDF page numbers) · 📗 LLM = Raschka (section numbers).</p>
 
 <div class="phase current">
-  <h3>1 · Python basics</h3>
-  <span class="when">12 topics + project · ≈ 4–5 weeks</span>
-  <ol>
-    <li><a href="lessons/0001-running-python.html">Running Python</a>: interactive mode, numbers, your first script</li>
-    <li><a href="lessons/0002-variables-and-strings.html">Variables and strings</a>: naming, text, f-strings, <code>input()</code></li>
-    <li><a href="lessons/0003-booleans-and-if-else.html">True/False and <code>if</code>/<code>else</code></a>: comparisons, <code>and</code>/<code>or</code>/<code>not</code>, blocks</li>
-    <li><a href="lessons/0004-lists-and-loops.html">Lists and loops</a>: indexing, <code>split</code>/<code>join</code>, <code>for</code>, <code>range</code>, <code>while</code></li>
-    <li><a href="lessons/0005-dicts-tuples-and-sets.html">Dictionaries, tuples and sets</a>: <code>.get()</code>, <code>.items()</code>, unpacking, set maths</li>
-    <li><a href="lessons/0006-functions.html">Functions</a>: <code>def</code>, <code>return</code>, defaults, keyword arguments, scope</li>
-    <li>Built-in functions and comprehensions</li>
-    <li>Errors and exceptions</li>
-    <li>Files and JSON</li>
-    <li>Modules, packages and <code>uv</code> (Python's npm)</li>
-    <li>Classes and dataclasses</li>
-    <li>Type hints</li>
+  <h3>1 · Finish Python basics</h3>
+  <span class="when">3 sessions · ≈ 1.5 weeks</span>
+  <ol start="7">
+    <li>Built-ins and comprehensions + errors and exceptions · 📖 FP ch. 2 “List Comprehensions and Generator Expressions” (PDF pp. 55–60)</li>
+    <li>Files and JSON + modules, packages and <code>uv</code> · 📖 FP ch. 4 “Handling Text Files” (PDF pp. 161–170)</li>
+    <li>Build: a small <code>job-radar</code> CLI that reads postings from a JSON file and counts skills</li>
   </ol>
-  <em>Project:</em> <code>job-radar</code>, a command-line tool that reads AI job postings and reports the most in-demand skills.
 </div>
 
 <div class="phase">
   <h3>2 · Python for web and APIs</h3>
-  <span class="when">≈ 2–3 weeks</span>
+  <span class="when">4 sessions · ≈ 2 weeks</span>
   <ul>
-    <li>Calling web APIs with httpx</li>
-    <li><code>async</code>/<code>await</code></li>
-    <li>Pydantic (data validation, used everywhere in LLM apps)</li>
-    <li>FastAPI (building your own API)</li>
+    <li>Classes, special methods and dataclasses · 📖 FP ch. 1 “The Python Data Model” (PDF pp. 33–48) + ch. 5 “Overview of Data Class Builders”, “Type Hints 101”, “More About @dataclass” (PDF pp. 194–198, 203–220)</li>
+    <li>Type hints and Pydantic · 📖 FP ch. 8 from “About Gradual Typing” to “Types Are Defined by Supported Operations” (PDF pp. 284–296)</li>
+    <li>httpx and <code>async</code>/<code>await</code> · 📖 FP ch. 21 from “A Few Definitions” to “Asynchronous Context Managers” (PDF pp. 807–817; it uses HTTPX too)</li>
+    <li>FastAPI · 📖 FP ch. 9 from “Decorators 101” to “Implementing a Simple Decorator” (PDF pp. 334–350). FastAPI routes are decorators.</li>
   </ul>
-  <em>Project:</em> turn <code>job-radar</code> into a web API.
+  <em>No separate project.</em> The FastAPI service is built in the Module 3 project.
 </div>
 
 <div class="phase">
-  <h3>3 · LLM fundamentals</h3>
-  <span class="when">≈ 4–5 weeks</span>
+  <h3>3 · LLM fundamentals (the core of the job)</h3>
+  <span class="when">11 sessions · ≈ 5.5 weeks</span>
   <ul>
-    <li>What an LLM is: tokens, context and temperature</li>
-    <li>Running a model on your own machine (Ollama / LM Studio)</li>
-    <li>Calling a free-tier model API</li>
-    <li>Prompting and structured output</li>
+    <li>What an LLM is · 📗 LLM ch. 1 (all)</li>
+    <li>Tokens and embeddings from the inside · 📗 LLM ch. 2, §2.1–2.5 (build a tokenizer, then use BPE with <code>tiktoken</code>). §2.6–2.8 are read again at the start of Module 6.</li>
+    <li>First local model call (Ollama / LM Studio) and first free-tier API call</li>
+    <li>Prompting and structured output (with Pydantic)</li>
+    <li>Streaming responses · 📖 FP ch. 17 from “Iterables Versus Iterators” to “When to Use Generator Expressions” (PDF pp. 629–645)</li>
     <li>Tool calling</li>
-    <li>Embeddings and vector search</li>
-    <li>RAG (retrieval-augmented generation)</li>
-    <li>Evals: proving your app works</li>
+    <li>Embeddings and vector search, then RAG</li>
+    <li>Evals: proving your app works (2 sessions)</li>
   </ul>
-  <em>Project:</em> an LLM that extracts skills from postings and answers questions about them.
+  <em>Project (2 sessions):</em> a FastAPI service that extracts skills from job postings and answers questions about them, with an eval report.
 </div>
 
 <div class="phase">
   <h3>4 · LangChain and LangGraph</h3>
-  <span class="when">≈ 2–3 weeks</span>
+  <span class="when">4 sessions · ≈ 2 weeks</span>
   <ul>
-    <li>LangChain 1.x: models, messages and tools</li>
-    <li>Agents with <code>create_agent</code> (the current API, <a href="https://docs.langchain.com/oss/python/langchain/agents">docs</a>)</li>
+    <li>LangChain 1.x: models, messages, tools and <code>create_agent</code> (<a href="https://docs.langchain.com/oss/python/langchain/agents">docs</a>)</li>
     <li>LangGraph: state, memory, human-in-the-loop</li>
-    <li>Agents and MCP</li>
+    <li>MCP, briefly</li>
   </ul>
-  <em>Project:</em> an agent version of <code>job-radar</code>.
+  <em>Project:</em> add an agent to the Module 3 service.
 </div>
 
 <div class="phase">
-  <h3>5 · Classic machine learning</h3>
-  <span class="when">≈ 3 weeks</span>
+  <h3>5 · Capstone (protected)</h3>
+  <span class="when">8 sessions · ≈ 4 weeks · ships ≈ end of January 2027</span>
   <ul>
-    <li>NumPy and pandas</li>
-    <li>scikit-learn: regression and classification</li>
-    <li>Train/test splits, metrics, overfitting</li>
+    <li>Tentative: a full-stack <strong>AI job-search copilot</strong>, built with your web skills on top of Modules 3–4</li>
+    <li>Deployed, with a README, a demo video and eval results. Start applying once it ships.</li>
   </ul>
-  <em>Project:</em> a classifier that predicts a posting's seniority.
+  <em>Confirm the idea together at the end of Module 3.</em> This module is never cut.
 </div>
 
 <div class="phase">
-  <h3>6 · Neural networks from scratch</h3>
-  <span class="when">≈ 3–4 weeks</span>
-  <ul>
-    <li>PyTorch tensors and autograd</li>
-    <li>Training loops, loss and gradient descent</li>
-    <li>A tiny GPT, following <a href="https://karpathy.ai/zero-to-hero.html">Karpathy's Zero to Hero</a></li>
-  </ul>
-  <em>Project:</em> train a small language model on a free cloud GPU.
+  <h3>6 · Build an LLM from scratch (Raschka, in order)</h3>
+  <span class="when">13 sessions · ≈ 6.5 weeks · runs on your Mac</span>
+  <ol>
+    <li>PyTorch basics · 📗 appendix A, §A.1–A.8</li>
+    <li>Data pipeline · 📗 §2.6–2.8 (sliding window, token and position embeddings)</li>
+    <li>Self-attention · 📗 §3.1–3.4</li>
+    <li>Causal and multi-head attention · 📗 §3.5–3.6</li>
+    <li>Layer norm, GELU feed-forward, shortcuts · 📗 §4.1–4.4</li>
+    <li>Transformer block, GPT model, generating text · 📗 §4.5–4.7</li>
+    <li>Evaluating and training · 📗 §5.1–5.2</li>
+    <li>Decoding strategies, saving, loading OpenAI's GPT-2 weights · 📗 §5.3–5.5</li>
+    <li>Classification fine-tuning, part 1 · 📗 §6.1–6.5</li>
+    <li>Classification fine-tuning, part 2: loss, accuracy, spam classifier · 📗 §6.6–6.8 (this covers train/val/test splits and metrics)</li>
+    <li>Instruction fine-tuning, part 1 · 📗 §7.1–7.5</li>
+    <li>Instruction fine-tuning, part 2: train, extract, evaluate · 📗 §7.6–7.9</li>
+    <li>LoRA, then publish your model to Hugging Face · 📗 appendix E</li>
+  </ol>
+  <em>Project:</em> <code>my-gpt</code>, your own GPT repo with a README that explains each part. It's strong interview material. Exercise solutions are in appendix C. Try each exercise before you look.
 </div>
 
 <div class="phase">
-  <h3>7 · Fine-tuning open models</h3>
-  <span class="when">≈ 2–3 weeks</span>
+  <h3>Buffer and optional</h3>
+  <span class="when">3 buffer sessions</span>
   <ul>
-    <li>Hugging Face: Transformers, Datasets, the Hub</li>
-    <li>LoRA fine-tuning with Unsloth on a free GPU</li>
-    <li>When to fine-tune, and when to use RAG or better prompts instead</li>
+    <li>Buffer for missed weeks. If unused: scikit-learn classic ML (2 sessions) or 📗 appendix D (learning-rate warmup, cosine decay, gradient clipping).</li>
+    <li>Later: more of <em>Fluent Python</em>. Read ch. 1 first, then any part in any order (the author's advice).</li>
   </ul>
-  <em>Project:</em> fine-tune a small model and publish it to Hugging Face.
 </div>
 
-<div class="phase">
-  <h3>8 · Capstone</h3>
-  <span class="when">≈ 3–4 weeks</span>
-  <ul>
-    <li>Tentative: a full-stack <strong>AI job-search copilot</strong>, built with your web skills plus everything above</li>
-    <li>Deployed, with a README, a demo video and eval results</li>
-  </ul>
-  <em>We'll confirm the idea together after Module 3.</em>
-</div>
+<h2>If you fall behind: cut order</h2>
+<ol>
+  <li>Use the 3 buffer sessions first.</li>
+  <li>📖 Fluent Python readings become skims. The lessons still cover what you need.</li>
+  <li>Module 4 shrinks to one agent session.</li>
+  <li>Module 6 drops ch. 7 (instruction fine-tuning) and keeps appendix A, ch. 2–6 and LoRA.</li>
+  <li>Never cut: the capstone and evals. They are what get you hired.</li>
+</ol>
 
 <h2>Communities</h2>
 <p>The lessons give you knowledge and skills; wisdom comes from other people. For now: <a href="https://www.pythondiscord.com/">Python Discord</a> and <a href="https://www.reddit.com/r/learnpython/">r/learnpython</a>, which both welcome beginners. See <a href="RESOURCES.md">RESOURCES.md</a> for the full list.</p>

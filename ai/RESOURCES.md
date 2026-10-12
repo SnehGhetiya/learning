@@ -4,6 +4,12 @@ All entries were checked on 2026-09-23. Re-verify versions and free-tier limits 
 
 ## Knowledge
 
+### Books (the learner's own PDFs, in `~/Downloads`)
+- **_Fluent Python_, 2nd ed., Luciano Ramalho (O'Reilly, 2022)** (`fluent-python-2nd.pdf`)
+  A deep guide to idiomatic Python by a long-time Python Software Foundation fellow. Its preface warns it's hard for beginners and recommends reading ch. 1 first, then any part. Examples were tested on 3.10. Use for: selected sections paired with Modules 1–3 (see `index.html`). Companion site: [fluentpython.com](https://www.fluentpython.com/).
+- **_Build a Large Language Model (From Scratch)_, Sebastian Raschka (Manning, 2024)** (`build-large-language-model-scratch.pdf`)
+  Builds a GPT step by step: tokenization, attention, the model, pretraining, then classification and instruction fine-tuning, plus LoRA (appendix E). It's meant to be read in order and runs on a laptop. Official code: [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch). Use for: Module 3 (ch. 1–2) and Module 6 (the whole book).
+
 ### Python & tooling
 - [The Python Tutorial (official, for Python 3.14.7)](https://docs.python.org/3/tutorial/index.html)
   The canonical introduction, written by the Python team. Use for: any core language feature (data structures, control flow, modules, classes, errors).

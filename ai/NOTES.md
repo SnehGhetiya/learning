@@ -7,7 +7,11 @@
 - Wants learning to lead to a resume-ready capstone.
 - Coming from **web development**. JS/Node analogies help, but **never skip explaining the Python concept itself**. Complete beginner in Python/AI.
 - One new tool at a time: plain `python3` scripts first, uv when packages are introduced (Module 1, Topic 10).
-- **~10 h/week** (confirmed 2026-09-24, LR-0005) and free-only. Topics can be fuller (30–40 min) and richer in practice.
+- **~5–6 h/week, ~5 months** (2026-10-12, LR-0010) and free-only. A friend pushed for speed, so don't linger on Python.
+- **Wants to learn from books + AI + projects together** (LR-0010). Each ~2.5 h session = **read** (book section, 30–40 min) → **learn with Claude** (lesson + quiz + questions, ~40 min) → **build** (60–70 min). Every lesson names its reading and must still stand alone if it was skipped.
+  - 📖 *Fluent Python* 2nd ed.: `~/Downloads/fluent-python-2nd.pdf`. **Selected sections only** (preface: hard for beginners). Tested on 3.10, so flag 3.11–3.14 differences. Cite by section name + PDF page.
+  - 📗 Raschka, *Build a LLM (From Scratch)*: `~/Downloads/build-large-language-model-scratch.pdf`. **Read in order**; needs solid Python; runs on a laptop. Code is at github.com/rasbt/LLMs-from-scratch; solutions in appendix C. Cite by § number.
+  - Reading the PDFs: no poppler; `pypdf` is installed for `/Library/Developer/CommandLineTools/usr/bin/python3` (add `site.getusersitepackages()` to `sys.path` when run with `-I`).
 
 ## Environment (checked 2026-09-23)
 - Now on macOS (Darwin), zsh, Python 3.14.7 installed (was Linux at first), Node installed, Homebrew (linuxbrew) available.
@@ -15,16 +19,16 @@
 - Practice files live in `~/Documents/learning/ai/practice/NN_name.py`; module projects in `~/Documents/learning/ai/projects/`.
 - No NVIDIA GPU, 30 GB RAM, 8 cores → local Ollama with 7–8B quantized models is OK; use free Colab/Kaggle for training/fine-tuning.
 
-## Course structure (tentative; rendered in `index.html`)
-Modules, each = topic lessons → module project. About 6 months at ~10 h/week.
-1. **Python basics**: 1 running Python & numbers ✅ done · 2 variables & strings ✅ done (8/8) · 3 booleans & if/else ✅ done (10/10) · 4 lists & loops ✅ done (10/10) · 5 dicts, tuples, sets ✅ done (8/10) · 6 functions ✅ done (9/10) · 7 built-ins & comprehensions · 8 errors & exceptions · 9 files & JSON · 10 modules, packages & uv · 11 classes & dataclasses · 12 type hints → **Project: `job-radar` CLI** (reuse `drafts/phase1-project-job-radar-draft.html`)
-2. **Python for web & APIs**: HTTP with httpx · async/await · Pydantic · FastAPI → **Project: job-radar API**
-3. **LLM fundamentals**: what LLMs are & tokens · first local call (Ollama/LM Studio) · first free API call · prompting · structured output · tool calling · embeddings · RAG · evals → **Project: skill extractor + Q&A over postings**
-4. **LangChain & LangGraph** (v1.x: `create_agent`, middleware, LangGraph runtime; verify at lesson time) → **Project: agent version of job-radar**
-5. **Classic ML**: NumPy · pandas · scikit-learn · metrics → **Project: seniority classifier**
-6. **Deep learning**: PyTorch · training loops · tiny GPT (Karpathy) → **Project: train a small LM on free GPU**
-7. **Fine-tuning**: HF ecosystem · LoRA with Unsloth · compare with RAG/prompting → **Project: fine-tuned model on the Hub**
-8. **Capstone**: tentative AI job-search copilot (confirm near the end of Module 3).
+## Course structure (fast track + books, rendered in `index.html`, which holds the exact reading per session)
+About 46 sessions (~2.5 h, 2 a week). Sessions per module are in brackets.
+1. **Finish Python** [3]: Topics 1–6 ✅ · S1 built-ins/comprehensions/errors (FP ch. 2 listcomps) · S2 files/JSON + uv (FP ch. 4 text files) · S3 small `job-radar` CLI (reuse `drafts/phase1-project-job-radar-draft.html`)
+2. **Web & APIs** [4]: classes/dataclasses (FP ch. 1, 5) · type hints + Pydantic (FP ch. 8) · httpx + async (FP ch. 21) · FastAPI (FP ch. 9 decorators). No separate project.
+3. **LLM fundamentals** [11]: Raschka ch. 1 + §2.1–2.5 · local + free API call · prompting/structured output · streaming (FP ch. 17) · tool calling · embeddings · RAG · evals ×2 → **Project**: FastAPI skill extractor + Q&A with an eval report
+4. **LangChain & LangGraph** [4] (v1.x, `create_agent`; verify at lesson time) → agent added to the Module 3 service
+5. **Capstone** [8], protected, ships ~end of Jan 2027: AI job-search copilot (confirm at the end of Module 3)
+6. **Raschka in order** [13]: appendix A · §2.6–2.8 · ch. 3 ×2 · ch. 4 ×2 · ch. 5 ×2 · ch. 6 ×2 · ch. 7 ×2 · appendix E + HF publish → `my-gpt` repo
+Buffer [3]: scikit-learn or appendix D if unused.
+Cut order: buffer → FP becomes skim → Module 4 → Raschka ch. 7. Never cut evals or the capstone.
 
 ## Glossary
 Not created yet. Create `GLOSSARY.md` once the learner can *use* terms correctly (per the glossary rules), not before.
